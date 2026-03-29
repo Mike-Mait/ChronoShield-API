@@ -1,3 +1,5 @@
+import path from "path";
+import fs from "fs";
 import Fastify from "fastify";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
@@ -5,6 +7,8 @@ import { config } from "./config/env";
 import { validateRoute } from "./routes/validate";
 import { resolveRoute } from "./routes/resolve";
 import { convertRoute } from "./routes/convert";
+import { keysRoute } from "./routes/keys";
+import { webhooksRoute } from "./routes/webhooks";
 import { AppError } from "./utils/errors";
 
 const app = Fastify({
@@ -18,21 +22,23 @@ const app = Fastify({
   genReqId: () => crypto.randomUUID(),
 });
 
+// Paths that skip API key auth
+const publicPaths = ["/health", "/docs", "/api/keys", "/api/webhooks"];
+
 // API key auth hook
 app.addHook("onRequest", async (request, reply) => {
-  // Skip auth for health check and docs
-  const skipPaths = ["/health", "/docs", "/docs/"];
   if (
-    skipPaths.some((p) => request.url.startsWith(p)) ||
     request.url === "/" ||
-    request.url.startsWith("/docs/")
+    publicPaths.some((p) => request.url.startsWith(p)) ||
+    request.url.startsWith("/docs/") ||
+    request.url.startsWith("/assets")
   ) {
     return;
   }
 
   const apiKey = request.headers["x-api-key"];
   if (!config.apiKey) {
-    return; // No key configured, skip auth
+    return;
   }
 
   if (!apiKey || apiKey !== config.apiKey) {
@@ -97,10 +103,21 @@ async function start() {
   // Health check
   app.get("/health", { schema: { hide: true } }, async () => ({ status: "ok" }));
 
-  // Routes
+  // Landing page
+  app.get("/", { schema: { hide: true } }, async (_request, reply) => {
+    const htmlPath = path.join(__dirname, "public", "index.html");
+    const html = fs.readFileSync(htmlPath, "utf-8");
+    return reply.type("text/html").send(html);
+  });
+
+  // API routes
   await app.register(validateRoute);
   await app.register(resolveRoute);
   await app.register(convertRoute);
+  await app.register(keysRoute);
+
+  // Stripe webhook needs its own encapsulated context for raw body parsing
+  await app.register(webhooksRoute);
 
   await app.listen({ port: config.port, host: config.host });
   console.log(`ChronoGuard API running at http://localhost:${config.port}`);

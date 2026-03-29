@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChronoGuard &mdash; Never ship a timezone bug again</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50:'#eef6ff', 100:'#d9eaff', 200:'#bcdaff', 300:'#8ec2ff', 400:'#59a0ff', 500:'#3378ff', 600:'#1b57f5', 700:'#1543e1', 800:'#1837b6', 900:'#1a328f', 950:'#141f57' },
+          },
+          fontFamily: { mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'] },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .code-block { font-family: 'JetBrains Mono', monospace; }
+    .gradient-border { background: linear-gradient(135deg, #3378ff 0%, #8ec2ff 100%); }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+    .fade-up { animation: fadeUp .5s ease-out both; }
+    .fade-up-d1 { animation-delay: .1s; }
+    .fade-up-d2 { animation-delay: .2s; }
+    .fade-up-d3 { animation-delay: .3s; }
+  </style>
+</head>
+<body class="bg-brand-950 text-white antialiased">
+
+  <!-- ─── HERO ─── -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(51,120,255,.25),transparent)]"></div>
+    <div class="relative max-w-3xl mx-auto px-6 pt-28 pb-20 text-center">
+      <div class="fade-up inline-flex items-center gap-2 px-3 py-1 rounded-full border border-brand-400/20 bg-brand-400/5 text-brand-300 text-xs font-medium mb-8">
+        <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        v1.0 &mdash; Production Ready
+      </div>
+      <h1 class="fade-up fade-up-d1 text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1]">
+        Never ship a<br />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-brand-200">timezone bug</span> again.
+      </h1>
+      <p class="fade-up fade-up-d2 mt-6 text-lg text-slate-400 max-w-xl mx-auto leading-relaxed">
+        One API to validate, resolve, and convert datetimes across every timezone &mdash; with explicit handling of DST gaps, overlaps, and ambiguity.
+      </p>
+      <div class="fade-up fade-up-d3 mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#pricing" class="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm transition-colors shadow-lg shadow-brand-500/25">
+          Get Free API Key
+        </a>
+        <a href="#examples" class="w-full sm:w-auto px-8 py-3.5 rounded-lg border border-slate-700 hover:border-slate-500 text-slate-300 font-semibold text-sm transition-colors">
+          See Examples
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FEATURES ─── -->
+  <section class="max-w-5xl mx-auto px-6 py-20">
+    <div class="grid sm:grid-cols-3 gap-6">
+      <div class="rounded-xl border border-slate-800 bg-slate-900/50 p-6">
+        <div class="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3 class="font-semibold text-white mb-1">DST Gap Detection</h3>
+        <p class="text-sm text-slate-400 leading-relaxed">Catches invalid times that don't exist during spring-forward transitions. Returns the next valid time automatically.</p>
+      </div>
+      <div class="rounded-xl border border-slate-800 bg-slate-900/50 p-6">
+        <div class="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+        </div>
+        <h3 class="font-semibold text-white mb-1">Overlap Resolution</h3>
+        <p class="text-sm text-slate-400 leading-relaxed">Detects ambiguous fall-back times and resolves them with your preferred policy &mdash; earlier, later, or reject.</p>
+      </div>
+      <div class="rounded-xl border border-slate-800 bg-slate-900/50 p-6">
+        <div class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <h3 class="font-semibold text-white mb-1">&lt; 50ms p95 Latency</h3>
+        <p class="text-sm text-slate-400 leading-relaxed">Pure computation with cached timezone lookups. No external I/O in the request path. Boringly fast.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CODE EXAMPLES ─── -->
+  <section id="examples" class="max-w-3xl mx-auto px-6 py-20">
+    <h2 class="text-2xl font-bold text-center mb-2">See it in action</h2>
+    <p class="text-slate-400 text-center mb-12 text-sm">Three endpoints. Zero ambiguity.</p>
+
+    <!-- Tab buttons -->
+    <div class="flex gap-1 mb-4 bg-slate-900 rounded-lg p-1 border border-slate-800">
+      <button onclick="showTab('validate')" id="tab-validate" class="tab-btn flex-1 text-xs font-medium py-2 rounded-md bg-brand-500/20 text-brand-300 transition-colors">Validate</button>
+      <button onclick="showTab('resolve')" id="tab-resolve" class="tab-btn flex-1 text-xs font-medium py-2 rounded-md text-slate-500 hover:text-slate-300 transition-colors">Resolve</button>
+      <button onclick="showTab('convert')" id="tab-convert" class="tab-btn flex-1 text-xs font-medium py-2 rounded-md text-slate-500 hover:text-slate-300 transition-colors">Convert</button>
+    </div>
+
+    <!-- Validate -->
+    <div id="panel-validate" class="tab-panel">
+      <div class="rounded-xl border border-slate-800 bg-slate-900 overflow-hidden">
+        <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
+          <span class="text-[10px] font-bold tracking-wider uppercase text-emerald-400">Request</span>
+        </div>
+        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://api.chronoguard.dev/v1/datetime/validate \
+  -H <span class="text-amber-300">"x-api-key: YOUR_KEY"</span> \
+  -d <span class="text-emerald-300">'{
+    "local_datetime": "2026-03-08T02:30:00",
+    "time_zone": "America/New_York"
+  }'</span></code></pre>
+      </div>
+      <div class="mt-3 rounded-xl border border-slate-800 bg-slate-900 overflow-hidden">
+        <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
+          <span class="text-[10px] font-bold tracking-wider uppercase text-brand-400">Response</span>
+          <span class="ml-auto text-[10px] text-red-400 font-mono">status: invalid</span>
+        </div>
+        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code>{
+  <span class="text-brand-300">"status"</span>: <span class="text-red-400">"invalid"</span>,
+  <span class="text-brand-300">"reason_code"</span>: <span class="text-amber-300">"DST_GAP"</span>,
+  <span class="text-brand-300">"message"</span>: <span class="text-slate-400">"This time does not exist due to DST transition."</span>,
+  <span class="text-brand-300">"suggested_fixes"</span>: [
+    { <span class="text-brand-300">"strategy"</span>: <span class="text-emerald-300">"next_valid_time"</span>, <span class="text-brand-300">"local_datetime"</span>: <span class="text-emerald-300">"2026-03-08T03:00:00"</span> }
+  ]
+}</code></pre>
+      </div>
+    </div>
+
+    <!-- Resolve -->
+    <div id="panel-resolve" class="tab-panel hidden">
+      <div class="rounded-xl border border-slate-800 bg-slate-900 overflow-hidden">
+        <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
+          <span class="text-[10px] font-bold tracking-wider uppercase text-emerald-400">Request</span>
+        </div>
+        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://api.chronoguard.dev/v1/datetime/resolve \
+  -H <span class="text-amber-300">"x-api-key: YOUR_KEY"</span> \
+  -d <span class="text-emerald-300">'{
+    "local_datetime": "2026-11-01T01:30:00",
+    "time_zone": "America/New_York",
+    "resolution_policy": { "ambiguous": "earlier" }
+  }'</span></code></pre>
+      </div>
+      <div class="mt-3 rounded-xl border border-slate-800 bg-slate-900 overflow-hidden">
+        <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
+          <span class="text-brand-400 text-[10px] font-bold tracking-wider uppercase">Response</span>
+          <span class="ml-auto text-[10px] text-emerald-400 font-mono">resolved</span>
+        </div>
+        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code>{
+  <span class="text-brand-300">"instant_utc"</span>: <span class="text-emerald-300">"2026-11-01T05:30:00.000Z"</span>,
+  <span class="text-brand-300">"offset"</span>: <span class="text-emerald-300">"-04:00"</span>
+}</code></pre>
+      </div>
+    </div>
+
+    <!-- Convert -->
+    <div id="panel-convert" class="tab-panel hidden">
+      <div class="rounded-xl border border-slate-800 bg-slate-900 overflow-hidden">
+        <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
+          <span class="text-[10px] font-bold tracking-wider uppercase text-emerald-400">Request</span>
+        </div>
+        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://api.chronoguard.dev/v1/datetime/convert \
+  -H <span class="text-amber-300">"x-api-key: YOUR_KEY"</span> \
+  -d <span class="text-emerald-300">'{
+    "instant_utc": "2026-06-15T15:00:00Z",
+    "target_time_zone": "Europe/London"
+  }'</span></code></pre>
+      </div>
+      <div class="mt-3 rounded-xl border border-slate-800 bg-slate-900 overflow-hidden">
+        <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
+          <span class="text-brand-400 text-[10px] font-bold tracking-wider uppercase">Response</span>
+          <span class="ml-auto text-[10px] text-emerald-400 font-mono">converted</span>
+        </div>
+        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code>{
+  <span class="text-brand-300">"local_datetime"</span>: <span class="text-emerald-300">"2026-06-15T16:00:00"</span>,
+  <span class="text-brand-300">"offset"</span>: <span class="text-emerald-300">"+01:00"</span>,
+  <span class="text-brand-300">"time_zone"</span>: <span class="text-emerald-300">"Europe/London"</span>
+}</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PRICING ─── -->
+  <section id="pricing" class="max-w-4xl mx-auto px-6 py-20">
+    <h2 class="text-2xl font-bold text-center mb-2">Simple, transparent pricing</h2>
+    <p class="text-slate-400 text-center mb-12 text-sm">Start free. Upgrade when you need to.</p>
+
+    <div class="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+      <!-- Free -->
+      <div class="rounded-xl border border-slate-800 bg-slate-900/50 p-8 flex flex-col">
+        <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Free</h3>
+        <div class="mt-4 flex items-baseline gap-1">
+          <span class="text-4xl font-extrabold text-white">$0</span>
+          <span class="text-slate-500 text-sm">/month</span>
+        </div>
+        <ul class="mt-6 space-y-3 text-sm text-slate-400 flex-1">
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>1,000 requests / month</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>All 3 endpoints</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Community support</li>
+        </ul>
+        <button onclick="openModal('free')" class="mt-8 w-full py-3 rounded-lg border border-slate-700 hover:border-slate-500 text-white font-semibold text-sm transition-colors cursor-pointer">
+          Get Free API Key
+        </button>
+      </div>
+
+      <!-- Pro -->
+      <div class="rounded-xl border-2 border-brand-500 bg-slate-900/50 p-8 flex flex-col relative">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-brand-500 text-xs font-semibold text-white">Popular</div>
+        <h3 class="text-sm font-semibold text-brand-400 uppercase tracking-wider">Pro</h3>
+        <div class="mt-4 flex items-baseline gap-1">
+          <span class="text-4xl font-extrabold text-white">$19</span>
+          <span class="text-slate-500 text-sm">/month</span>
+        </div>
+        <ul class="mt-6 space-y-3 text-sm text-slate-400 flex-1">
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>100,000 requests / month</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>All 3 endpoints</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Priority email support</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Higher rate limits</li>
+        </ul>
+        <button onclick="openModal('pro')" class="mt-8 w-full py-3 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm transition-colors shadow-lg shadow-brand-500/25 cursor-pointer">
+          Get Pro API Key
+        </button>
+      </div>
+    </div>
+
+    <p class="text-center text-xs text-slate-600 mt-8">Need more? <a href="mailto:mikemaittech@gmail.com" class="text-brand-400 hover:underline">Contact us</a> for custom enterprise pricing.</p>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="border-t border-slate-800/50 py-8">
+    <div class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
+      <span>&copy; 2026 ChronoGuard. All rights reserved.</span>
+      <div class="flex gap-6">
+        <a href="/docs" class="hover:text-slate-400 transition-colors">API Docs</a>
+        <a href="https://github.com/Mike-Mait/ChronoGuard" class="hover:text-slate-400 transition-colors">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ─── EMAIL MODAL ─── -->
+  <div id="modal-overlay" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-8 mx-4 max-w-md w-full shadow-2xl">
+      <h3 class="text-lg font-bold text-white" id="modal-title">Get your API key</h3>
+      <p class="mt-2 text-sm text-slate-400" id="modal-desc">Enter your email and we'll send you an API key instantly.</p>
+
+      <form id="key-form" class="mt-6" onsubmit="submitEmail(event)">
+        <input type="hidden" id="form-tier" value="free" />
+        <label class="block text-xs font-medium text-slate-400 mb-1.5" for="email-input">Email address</label>
+        <input
+          id="email-input"
+          type="email"
+          required
+          placeholder="you@company.com"
+          class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+        />
+        <button
+          type="submit"
+          id="submit-btn"
+          class="mt-4 w-full py-3 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm transition-colors cursor-pointer"
+        >
+          Get API Key
+        </button>
+      </form>
+
+      <!-- Success state -->
+      <div id="key-success" class="hidden mt-4">
+        <div class="flex items-center gap-2 mb-3">
+          <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <span class="text-sm font-medium text-emerald-400">Your API key</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <code id="api-key-display" class="code-block flex-1 px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-sm text-brand-300 overflow-x-auto"></code>
+          <button onclick="copyKey()" id="copy-btn" class="shrink-0 px-3 py-3 rounded-lg bg-slate-800 border border-slate-700 hover:border-slate-500 text-slate-400 text-sm transition-colors cursor-pointer">Copy</button>
+        </div>
+        <p class="mt-3 text-xs text-slate-500">Save this key &mdash; it won't be shown again.</p>
+      </div>
+
+      <!-- Redirect for Pro -->
+      <div id="pro-redirect" class="hidden mt-4 text-center">
+        <p class="text-sm text-slate-400">Redirecting to checkout...</p>
+      </div>
+
+      <button onclick="closeModal()" class="mt-6 w-full py-2 text-sm text-slate-500 hover:text-slate-300 transition-colors cursor-pointer">Close</button>
+    </div>
+  </div>
+
+  <script>
+    /* ── Tabs ── */
+    function showTab(name) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('bg-brand-500/20','text-brand-300'); b.classList.add('text-slate-500'); });
+      document.getElementById('panel-' + name).classList.remove('hidden');
+      const btn = document.getElementById('tab-' + name);
+      btn.classList.add('bg-brand-500/20','text-brand-300');
+      btn.classList.remove('text-slate-500');
+    }
+
+    /* ── Modal ── */
+    function openModal(tier) {
+      document.getElementById('form-tier').value = tier;
+      document.getElementById('key-form').classList.remove('hidden');
+      document.getElementById('key-success').classList.add('hidden');
+      document.getElementById('pro-redirect').classList.add('hidden');
+      document.getElementById('email-input').value = '';
+
+      if (tier === 'pro') {
+        document.getElementById('modal-title').textContent = 'Get your Pro API key';
+        document.getElementById('modal-desc').textContent = "Enter your email, then you'll be redirected to complete payment.";
+        document.getElementById('submit-btn').textContent = 'Continue to Checkout';
+      } else {
+        document.getElementById('modal-title').textContent = 'Get your free API key';
+        document.getElementById('modal-desc').textContent = "Enter your email and we'll generate an API key instantly.";
+        document.getElementById('submit-btn').textContent = 'Get API Key';
+      }
+
+      const overlay = document.getElementById('modal-overlay');
+      overlay.classList.remove('hidden');
+      overlay.classList.add('flex');
+      document.getElementById('email-input').focus();
+    }
+
+    function closeModal() {
+      const overlay = document.getElementById('modal-overlay');
+      overlay.classList.add('hidden');
+      overlay.classList.remove('flex');
+    }
+
+    document.getElementById('modal-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+
+    /* ── Submit ── */
+    async function submitEmail(e) {
+      e.preventDefault();
+      const email = document.getElementById('email-input').value;
+      const tier = document.getElementById('form-tier').value;
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Please wait...';
+
+      try {
+        const res = await fetch('/api/keys', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, tier }),
+        });
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error || 'Something went wrong');
+
+        if (tier === 'pro' && data.checkout_url) {
+          document.getElementById('key-form').classList.add('hidden');
+          document.getElementById('pro-redirect').classList.remove('hidden');
+          window.location.href = data.checkout_url;
+        } else {
+          document.getElementById('key-form').classList.add('hidden');
+          document.getElementById('key-success').classList.remove('hidden');
+          document.getElementById('api-key-display').textContent = data.api_key;
+        }
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = tier === 'pro' ? 'Continue to Checkout' : 'Get API Key';
+      }
+    }
+
+    function copyKey() {
+      const key = document.getElementById('api-key-display').textContent;
+      navigator.clipboard.writeText(key);
+      document.getElementById('copy-btn').textContent = 'Copied!';
+      setTimeout(() => document.getElementById('copy-btn').textContent = 'Copy', 2000);
+    }
+  </script>
+</body>
+</html>
