@@ -1,0 +1,42 @@
+{
+  "name": "chronoguard",
+  "version": "1.0.0",
+  "description": "ChronoGuard API - DST-aware datetime validation, resolution, and conversion",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsx watch src/server.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy"
+  },
+  "keywords": [
+    "datetime",
+    "timezone",
+    "dst",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/swagger": "^9.7.0",
+    "@fastify/swagger-ui": "^5.2.5",
+    "@prisma/client": "^7.6.0",
+    "dotenv": "^17.3.1",
+    "fastify": "^5.8.4",
+    "ioredis": "^5.10.1",
+    "luxon": "^3.7.2",
+    "pino": "^10.3.1",
+    "prisma": "^7.6.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/luxon": "^3.7.1",
+    "@types/node": "^25.5.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.2"
+  }
+}

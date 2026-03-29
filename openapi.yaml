@@ -1,0 +1,161 @@
+openapi: "3.1.0"
+info:
+  title: ChronoGuard API
+  description: DST-aware datetime validation, resolution, and conversion API
+  version: "1.0.0"
+servers:
+  - url: http://localhost:3000
+security:
+  - apiKey: []
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: x-api-key
+      in: header
+paths:
+  /v1/datetime/validate:
+    post:
+      summary: Validate a local datetime
+      description: Check if a local datetime is valid, invalid (DST gap), or ambiguous (DST overlap) in the given timezone
+      tags: [datetime]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [local_datetime, time_zone]
+              properties:
+                local_datetime:
+                  type: string
+                  example: "2026-03-08T02:30:00"
+                time_zone:
+                  type: string
+                  example: "America/New_York"
+      responses:
+        "200":
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [valid, invalid, ambiguous]
+                  reason_code:
+                    type: string
+                    enum: [DST_GAP, DST_OVERLAP, INVALID_TIMEZONE]
+                  message:
+                    type: string
+                  suggested_fixes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        strategy:
+                          type: string
+                        local_datetime:
+                          type: string
+                  possible_instants:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        offset:
+                          type: string
+                        instant_utc:
+                          type: string
+
+  /v1/datetime/resolve:
+    post:
+      summary: Resolve a local datetime to UTC
+      description: Resolve an ambiguous or invalid local datetime to a UTC instant using the specified policy
+      tags: [datetime]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [local_datetime, time_zone]
+              properties:
+                local_datetime:
+                  type: string
+                  example: "2026-11-01T01:30:00"
+                time_zone:
+                  type: string
+                  example: "America/New_York"
+                resolution_policy:
+                  type: object
+                  properties:
+                    ambiguous:
+                      type: string
+                      enum: [earlier, later, reject]
+                      default: earlier
+                    invalid:
+                      type: string
+                      enum: [next_valid_time, previous_valid_time, reject]
+                      default: next_valid_time
+      responses:
+        "200":
+          description: Resolved UTC instant
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  instant_utc:
+                    type: string
+                  offset:
+                    type: string
+
+  /v1/datetime/convert:
+    post:
+      summary: Convert UTC to local time
+      description: Convert a UTC instant to a local datetime in the target timezone
+      tags: [datetime]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [instant_utc, target_time_zone]
+              properties:
+                instant_utc:
+                  type: string
+                  example: "2026-06-15T15:00:00Z"
+                target_time_zone:
+                  type: string
+                  example: "Europe/London"
+      responses:
+        "200":
+          description: Converted local datetime
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  local_datetime:
+                    type: string
+                  offset:
+                    type: string
+                  time_zone:
+                    type: string
+
+  /health:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok

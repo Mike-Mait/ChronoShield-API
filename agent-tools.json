@@ -1,0 +1,40 @@
+[
+  {
+    "name": "validate_local_datetime",
+    "description": "Check if a local datetime is valid, invalid (DST gap), or ambiguous (DST overlap) in the given timezone",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "local_datetime": { "type": "string", "description": "ISO 8601 local datetime (e.g. 2026-03-08T02:30:00)" },
+        "time_zone": { "type": "string", "description": "IANA timezone identifier (e.g. America/New_York)" }
+      },
+      "required": ["local_datetime", "time_zone"]
+    }
+  },
+  {
+    "name": "resolve_datetime",
+    "description": "Resolve an ambiguous or invalid local datetime to a UTC instant using the specified policy",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "local_datetime": { "type": "string", "description": "ISO 8601 local datetime" },
+        "time_zone": { "type": "string", "description": "IANA timezone identifier" },
+        "ambiguous_policy": { "type": "string", "enum": ["earlier", "later", "reject"], "description": "How to resolve ambiguous times (DST overlap)" },
+        "invalid_policy": { "type": "string", "enum": ["next_valid_time", "previous_valid_time", "reject"], "description": "How to resolve invalid times (DST gap)" }
+      },
+      "required": ["local_datetime", "time_zone"]
+    }
+  },
+  {
+    "name": "convert_datetime",
+    "description": "Convert a UTC instant to a local datetime in the target timezone",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "instant_utc": { "type": "string", "description": "ISO 8601 UTC datetime (e.g. 2026-06-15T15:00:00Z)" },
+        "target_time_zone": { "type": "string", "description": "IANA timezone identifier" }
+      },
+      "required": ["instant_utc", "target_time_zone"]
+    }
+  }
+]

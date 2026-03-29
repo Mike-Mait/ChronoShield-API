@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ApiKey {
+  id        String   @id @default(uuid())
+  keyHash   String   @unique @map("key_hash")
+  name      String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("api_keys")
+}
+
+model RequestLog {
+  id         String   @id @default(uuid())
+  endpoint   String
+  method     String
+  statusCode Int      @map("status_code")
+  latencyMs  Float    @map("latency_ms")
+  apiKeyId   String?  @map("api_key_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("request_logs")
+}
