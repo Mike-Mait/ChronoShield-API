@@ -27,11 +27,12 @@ const publicPaths = ["/health", "/docs", "/api/keys", "/api/webhooks"];
 
 // API key auth hook
 app.addHook("onRequest", async (request, reply) => {
+  const pathname = request.url.split("?")[0];
   if (
-    request.url === "/" ||
-    publicPaths.some((p) => request.url.startsWith(p)) ||
-    request.url.startsWith("/docs/") ||
-    request.url.startsWith("/assets")
+    pathname === "/" ||
+    publicPaths.some((p) => pathname.startsWith(p)) ||
+    pathname.startsWith("/docs/") ||
+    pathname.startsWith("/assets")
   ) {
     return;
   }

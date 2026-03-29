@@ -370,6 +370,35 @@
       document.getElementById('copy-btn').textContent = 'Copied!';
       setTimeout(() => document.getElementById('copy-btn').textContent = 'Copy', 2000);
     }
+
+    /* ── Handle checkout return ── */
+    (function handleCheckoutReturn() {
+      const params = new URLSearchParams(window.location.search);
+      const checkout = params.get('checkout');
+      const key = params.get('key');
+
+      if (checkout === 'success' && key) {
+        // Show modal with the key
+        document.getElementById('modal-title').textContent = 'Payment successful!';
+        document.getElementById('modal-desc').textContent = 'Your Pro plan is now active. Here is your API key:';
+        document.getElementById('key-form').classList.add('hidden');
+        document.getElementById('key-success').classList.remove('hidden');
+        document.getElementById('api-key-display').textContent = key;
+        const overlay = document.getElementById('modal-overlay');
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
+        // Clean URL
+        window.history.replaceState({}, '', '/');
+      } else if (checkout === 'cancelled') {
+        document.getElementById('modal-title').textContent = 'Checkout cancelled';
+        document.getElementById('modal-desc').textContent = 'No worries — you can try again any time, or start with the free tier.';
+        document.getElementById('key-form').classList.add('hidden');
+        const overlay = document.getElementById('modal-overlay');
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
+        window.history.replaceState({}, '', '/');
+      }
+    })();
   </script>
 </body>
 </html>
