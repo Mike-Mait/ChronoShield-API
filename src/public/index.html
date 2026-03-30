@@ -311,13 +311,35 @@
     </div>
   </section>
 
-  <!-- ─── TRUST SIGNALS ─── -->
-  <section class="max-w-3xl mx-auto px-6 py-10">
-    <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs text-slate-500">
-      <span class="flex items-center gap-1.5">
-        <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        55 tests passing
-      </span>
+  <!-- ─── PRODUCTION INFRASTRUCTURE ─── -->
+  <section class="max-w-4xl mx-auto px-6 py-16">
+    <h2 class="text-2xl font-bold text-center mb-2">Production infrastructure, not a wrapper</h2>
+    <p class="text-slate-400 text-center mb-10 text-sm max-w-2xl mx-auto">ChronoGuard isn't a thin layer over a timezone library. It's correctness infrastructure with the operational maturity to match.</p>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="rounded-lg border border-slate-800 bg-slate-900/30 p-4 text-center">
+        <div class="text-2xl font-extrabold text-white">55</div>
+        <div class="text-xs text-slate-500 mt-1">tests passing</div>
+        <div class="text-[10px] text-slate-600 mt-0.5">Including adversarial DST edge cases across 6 timezone regimes</div>
+      </div>
+      <div class="rounded-lg border border-slate-800 bg-slate-900/30 p-4 text-center">
+        <div class="text-2xl font-extrabold text-white">&lt;50ms</div>
+        <div class="text-xs text-slate-500 mt-1">p95 latency</div>
+        <div class="text-[10px] text-slate-600 mt-0.5">Pure computation, no external I/O in the request path</div>
+      </div>
+      <div class="rounded-lg border border-slate-800 bg-slate-900/30 p-4 text-center">
+        <div class="text-2xl font-extrabold text-white">v1.1</div>
+        <div class="text-xs text-slate-500 mt-1">versioned API</div>
+        <div class="text-[10px] text-slate-600 mt-0.5">X-API-Version header on every response. <a href="https://github.com/Mike-Mait/ChronoGuard/blob/master/CHANGELOG.md" class="text-brand-400 hover:underline">Changelog</a></div>
+      </div>
+      <div class="rounded-lg border border-slate-800 bg-slate-900/30 p-4 text-center">
+        <div class="text-2xl font-extrabold text-white flex items-center justify-center gap-1">
+          <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div class="text-xs text-slate-500 mt-1">persistent storage</div>
+        <div class="text-[10px] text-slate-600 mt-0.5">PostgreSQL-backed keys &amp; usage. <a href="/status" class="text-brand-400 hover:underline">Live status</a></div>
+      </div>
+    </div>
+    <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-6 text-xs text-slate-600">
       <span class="flex items-center gap-1.5">
         <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         Open source on GitHub
@@ -328,7 +350,15 @@
       </span>
       <span class="flex items-center gap-1.5">
         <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        Full OpenAPI 3.1 spec
+        OpenAPI 3.1 spec
+      </span>
+      <span class="flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        TypeScript &amp; Python SDKs
+      </span>
+      <span class="flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        AI agent tool schemas
       </span>
     </div>
   </section>
@@ -348,7 +378,7 @@
         </div>
         <ul class="mt-6 space-y-3 text-sm text-slate-400 flex-1">
           <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>1,000 requests / month</li>
-          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>All 3 endpoints</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>All endpoints + batch</li>
           <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Community support</li>
         </ul>
         <button onclick="openModal('free')" class="mt-8 w-full py-3 rounded-lg border border-slate-700 hover:border-slate-500 text-white font-semibold text-sm transition-colors cursor-pointer">
@@ -366,9 +396,9 @@
         </div>
         <ul class="mt-6 space-y-3 text-sm text-slate-400 flex-1">
           <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>100,000 requests / month</li>
-          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>All 3 endpoints</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>All endpoints + batch</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Persistent key &amp; usage storage</li>
           <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Priority email support</li>
-          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Higher rate limits</li>
         </ul>
         <button onclick="openModal('pro')" class="mt-8 w-full py-3 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm transition-colors shadow-lg shadow-brand-500/25 cursor-pointer">
           Get Pro API Key
