@@ -8,12 +8,18 @@ datasource db {
 }
 
 model ApiKey {
-  id        String   @id @default(uuid())
-  keyHash   String   @unique @map("key_hash")
-  name      String
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id              String   @id @default(uuid())
+  email           String   @unique
+  keyHash         String   @unique @map("key_hash")
+  tier            String   @default("free")
+  requestsUsed    Int      @default(0) @map("requests_used")
+  requestsLimit   Int      @default(1000) @map("requests_limit")
+  stripeCustomerId String? @map("stripe_customer_id")
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  requestLogs RequestLog[]
 
   @@map("api_keys")
 }
@@ -25,7 +31,10 @@ model RequestLog {
   statusCode Int      @map("status_code")
   latencyMs  Float    @map("latency_ms")
   apiKeyId   String?  @map("api_key_id")
+  apiKey     ApiKey?  @relation(fields: [apiKeyId], references: [id])
   createdAt  DateTime @default(now()) @map("created_at")
 
+  @@index([apiKeyId])
+  @@index([createdAt])
   @@map("request_logs")
 }

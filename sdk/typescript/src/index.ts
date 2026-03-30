@@ -36,6 +36,26 @@ export interface ConvertResponse {
   time_zone: string;
 }
 
+export type BatchItem =
+  | ({ operation: "validate" } & ValidateRequest)
+  | ({ operation: "resolve" } & ResolveRequest)
+  | ({ operation: "convert" } & ConvertRequest);
+
+export interface BatchResultItem {
+  index: number;
+  operation: string;
+  success: boolean;
+  data?: ValidateResponse | ResolveResponse | ConvertResponse;
+  error?: { message: string; code?: string };
+}
+
+export interface BatchResponse {
+  results: BatchResultItem[];
+  total: number;
+  succeeded: number;
+  failed: number;
+}
+
 export class ChronoGuardClient {
   private baseUrl: string;
   private apiKey: string;
@@ -73,5 +93,9 @@ export class ChronoGuardClient {
 
   async convert(req: ConvertRequest): Promise<ConvertResponse> {
     return this.request<ConvertResponse>("/v1/datetime/convert", req);
+  }
+
+  async batch(items: BatchItem[]): Promise<BatchResponse> {
+    return this.request<BatchResponse>("/v1/datetime/batch", { items });
   }
 }

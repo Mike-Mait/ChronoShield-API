@@ -102,3 +102,15 @@ class ChronoGuardClient:
             },
         )
         return ConvertResponse(**result)
+
+    def batch(
+        self, items: list[dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Process up to 100 validate/resolve/convert operations in one request.
+
+        Each item must include 'operation' ('validate', 'resolve', or 'convert')
+        plus the relevant fields for that operation.
+
+        Returns dict with 'results', 'total', 'succeeded', 'failed'.
+        """
+        return self._request("/v1/datetime/batch", {"items": items})

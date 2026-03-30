@@ -235,7 +235,7 @@
         <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
           <span class="text-[10px] font-bold tracking-wider uppercase text-emerald-400">Request</span>
         </div>
-        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://api.chronoguard.dev/v1/datetime/validate \
+        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://chronoguard-api-production.up.railway.app/v1/datetime/validate \
   -H <span class="text-amber-300">"x-api-key: YOUR_KEY"</span> \
   -d <span class="text-emerald-300">'{
     "local_datetime": "2026-03-08T02:30:00",
@@ -264,7 +264,7 @@
         <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
           <span class="text-[10px] font-bold tracking-wider uppercase text-emerald-400">Request</span>
         </div>
-        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://api.chronoguard.dev/v1/datetime/resolve \
+        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://chronoguard-api-production.up.railway.app/v1/datetime/resolve \
   -H <span class="text-amber-300">"x-api-key: YOUR_KEY"</span> \
   -d <span class="text-emerald-300">'{
     "local_datetime": "2026-11-01T01:30:00",
@@ -290,7 +290,7 @@
         <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
           <span class="text-[10px] font-bold tracking-wider uppercase text-emerald-400">Request</span>
         </div>
-        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://api.chronoguard.dev/v1/datetime/convert \
+        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://chronoguard-api-production.up.railway.app/v1/datetime/convert \
   -H <span class="text-amber-300">"x-api-key: YOUR_KEY"</span> \
   -d <span class="text-emerald-300">'{
     "instant_utc": "2026-06-15T15:00:00Z",

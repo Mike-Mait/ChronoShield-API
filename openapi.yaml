@@ -4,7 +4,10 @@ info:
   description: DST-aware datetime validation, resolution, and conversion API
   version: "1.0.0"
 servers:
+  - url: https://chronoguard-api-production.up.railway.app
+    description: Production
   - url: http://localhost:3000
+    description: Local development
 security:
   - apiKey: []
 components:
@@ -144,6 +147,76 @@ paths:
                     type: string
                   time_zone:
                     type: string
+
+  /v1/datetime/batch:
+    post:
+      summary: Batch process multiple datetime operations
+      description: Process up to 100 validate, resolve, and convert operations in a single request
+      tags: [datetime]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [items]
+              properties:
+                items:
+                  type: array
+                  maxItems: 100
+                  items:
+                    type: object
+                    required: [operation]
+                    properties:
+                      operation:
+                        type: string
+                        enum: [validate, resolve, convert]
+                      local_datetime:
+                        type: string
+                      time_zone:
+                        type: string
+                      instant_utc:
+                        type: string
+                      target_time_zone:
+                        type: string
+                      resolution_policy:
+                        type: object
+                        properties:
+                          ambiguous:
+                            type: string
+                            enum: [earlier, later, reject]
+                          invalid:
+                            type: string
+                            enum: [next_valid_time, previous_valid_time, reject]
+      responses:
+        "200":
+          description: Batch results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: integer
+                        operation:
+                          type: string
+                        success:
+                          type: boolean
+                        data:
+                          type: object
+                        error:
+                          type: object
+                  total:
+                    type: integer
+                  succeeded:
+                    type: integer
+                  failed:
+                    type: integer
 
   /health:
     get:

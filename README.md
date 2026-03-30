@@ -18,6 +18,7 @@ ChronoGuard is a production-ready REST API that prevents timezone bugs by explic
   - [POST /v1/datetime/validate](#post-v1datetimevalidate)
   - [POST /v1/datetime/resolve](#post-v1datetimeresolve)
   - [POST /v1/datetime/convert](#post-v1datetimeconvert)
+  - [POST /v1/datetime/batch](#post-v1datetimebatch)
   - [GET /health](#get-health)
 - [Enums & Constants](#enums--constants)
 - [Error Handling](#error-handling)
@@ -283,6 +284,63 @@ Convert a UTC instant to a local datetime in the target timezone. This is a simp
 | `local_datetime` | `string` | The local datetime in the target timezone |
 | `offset` | `string` | The UTC offset at that moment (e.g., `+01:00` for BST) |
 | `time_zone` | `string` | The timezone that was applied |
+
+---
+
+### POST /v1/datetime/batch
+
+Process up to 100 validate, resolve, and convert operations in a single request. Partial failures are handled gracefully — each item gets its own success/error result.
+
+**When to use:** Importing calendar events, migrating scheduling data, or any scenario where you need to process multiple datetimes at once.
+
+#### Request
+
+```json
+{
+  "items": [
+    {
+      "operation": "validate",
+      "local_datetime": "2026-03-08T02:30:00",
+      "time_zone": "America/New_York"
+    },
+    {
+      "operation": "resolve",
+      "local_datetime": "2026-11-01T01:30:00",
+      "time_zone": "America/New_York",
+      "resolution_policy": { "ambiguous": "earlier" }
+    },
+    {
+      "operation": "convert",
+      "instant_utc": "2026-06-15T15:00:00Z",
+      "target_time_zone": "Europe/London"
+    }
+  ]
+}
+```
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `items` | `array` | Yes | Array of operations (1–100 items) |
+| `items[].operation` | `string` | Yes | `"validate"`, `"resolve"`, or `"convert"` |
+
+Each item includes the fields for its respective operation (see individual endpoint docs above).
+
+#### Response
+
+```json
+{
+  "results": [
+    { "index": 0, "operation": "validate", "success": true, "data": { "status": "invalid", "reason_code": "DST_GAP", ... } },
+    { "index": 1, "operation": "resolve", "success": true, "data": { "instant_utc": "2026-11-01T05:30:00.000Z", "offset": "-04:00" } },
+    { "index": 2, "operation": "convert", "success": true, "data": { "local_datetime": "2026-06-15T16:00:00", "offset": "+01:00", "time_zone": "Europe/London" } }
+  ],
+  "total": 3,
+  "succeeded": 3,
+  "failed": 0
+}
+```
+
+Failed items return `success: false` with an `error` object instead of `data`, while the rest of the batch still succeeds.
 
 ---
 

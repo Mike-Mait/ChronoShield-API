@@ -76,6 +76,7 @@
       <a href="#validate" class="sidebar-link block py-1.5 text-sm border-l-2 border-transparent pl-3 text-slate-500">POST /validate</a>
       <a href="#resolve" class="sidebar-link block py-1.5 text-sm border-l-2 border-transparent pl-3 text-slate-500">POST /resolve</a>
       <a href="#convert" class="sidebar-link block py-1.5 text-sm border-l-2 border-transparent pl-3 text-slate-500">POST /convert</a>
+      <a href="#batch" class="sidebar-link block py-1.5 text-sm border-l-2 border-transparent pl-3 text-slate-500">POST /batch</a>
       <a href="#health" class="sidebar-link block py-1.5 text-sm border-l-2 border-transparent pl-3 text-slate-500">GET /health</a>
 
       <p class="text-[10px] font-bold uppercase tracking-widest text-slate-600 mb-3 mt-6">Reference</p>
@@ -439,6 +440,61 @@
 }</code></pre>
           </div>
         </div>
+      </section>
+
+      <!-- ─── BATCH ─── -->
+      <section id="batch" class="mb-16">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="px-2.5 py-1 rounded text-xs font-bold bg-emerald-500/10 text-emerald-400">POST</span>
+          <h2 class="text-xl font-bold text-white font-mono">/v1/datetime/batch</h2>
+        </div>
+        <p class="text-sm text-slate-400 mb-2">Process up to 100 validate, resolve, and convert operations in a single request.</p>
+        <p class="text-sm text-slate-400 mb-6"><strong class="text-white">When to use:</strong> Importing calendar events, migrating scheduling data, or any scenario where you need to check multiple datetimes at once. Partial failures are handled gracefully &mdash; each item succeeds or fails independently.</p>
+
+        <div class="rounded-xl border border-slate-800 bg-slate-900 overflow-hidden mb-3">
+          <div class="px-4 py-2.5 border-b border-slate-800 flex items-center gap-2">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Request</span>
+          </div>
+          <pre class="text-sm p-4 text-slate-300 leading-relaxed"><code>curl -X POST https://chronoguard-api-production.up.railway.app/v1/datetime/batch \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -d '{
+    "items": [
+      { "operation": "validate", "local_datetime": "2026-03-08T02:30:00", "time_zone": "America/New_York" },
+      { "operation": "resolve", "local_datetime": "2026-11-01T01:30:00", "time_zone": "America/New_York", "resolution_policy": { "ambiguous": "earlier" } },
+      { "operation": "convert", "instant_utc": "2026-06-15T15:00:00Z", "target_time_zone": "Europe/London" }
+    ]
+  }'</code></pre>
+        </div>
+
+        <div class="rounded-xl border border-slate-800 bg-slate-900 overflow-hidden mb-6">
+          <div class="px-4 py-2.5 border-b border-slate-800">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-brand-400">Response</span>
+            <span class="ml-2 text-[10px] text-emerald-400 font-mono">200 &mdash; 3 succeeded, 0 failed</span>
+          </div>
+          <pre class="text-sm p-4 text-slate-300 leading-relaxed"><code>{
+  "results": [
+    { "index": 0, "operation": "validate", "success": true, "data": { "status": "invalid", "reason_code": "DST_GAP", ... } },
+    { "index": 1, "operation": "resolve", "success": true, "data": { "instant_utc": "2026-11-01T05:30:00.000Z", "offset": "-04:00" } },
+    { "index": 2, "operation": "convert", "success": true, "data": { "local_datetime": "2026-06-15T16:00:00", "offset": "+01:00" } }
+  ],
+  "total": 3,
+  "succeeded": 3,
+  "failed": 0
+}</code></pre>
+        </div>
+
+        <h3 class="text-sm font-bold text-white mb-3">Request fields</h3>
+        <div class="overflow-x-auto mb-4">
+          <table class="param-table w-full text-sm border-collapse">
+            <thead><tr class="text-left border-b border-slate-800"><th class="py-2 pr-4 text-slate-500 font-medium">Field</th><th class="py-2 pr-4 text-slate-500 font-medium">Type</th><th class="py-2 pr-4 text-slate-500 font-medium">Required</th><th class="py-2 text-slate-500 font-medium">Description</th></tr></thead>
+            <tbody class="text-slate-400">
+              <tr class="border-b border-slate-800/50"><td class="py-2 pr-4 font-mono text-xs text-brand-300">items</td><td class="py-2 pr-4">array</td><td class="py-2 pr-4">Yes</td><td class="py-2">Array of 1&ndash;100 operation objects</td></tr>
+              <tr class="border-b border-slate-800/50"><td class="py-2 pr-4 font-mono text-xs text-brand-300">items[].operation</td><td class="py-2 pr-4">string</td><td class="py-2 pr-4">Yes</td><td class="py-2"><code class="text-xs">"validate"</code>, <code class="text-xs">"resolve"</code>, or <code class="text-xs">"convert"</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-slate-500">Each item includes the same fields as its respective individual endpoint. Failed items return <code class="text-xs">success: false</code> with an <code class="text-xs">error</code> object.</p>
       </section>
 
       <!-- ─── HEALTH ─── -->

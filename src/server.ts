@@ -8,9 +8,11 @@ import { validateRoute } from "./routes/validate";
 import { resolveRoute } from "./routes/resolve";
 import { convertRoute } from "./routes/convert";
 import { keysRoute } from "./routes/keys";
+import { batchRoute } from "./routes/batch";
 import { webhooksRoute } from "./routes/webhooks";
 import { AppError } from "./utils/errors";
-import { lookupKey, incrementUsage } from "./routes/keys";
+import { lookupKeyAsync, incrementUsage } from "./routes/keys";
+import { getPrisma, disconnectPrisma } from "./db/client";
 
 const app = Fastify({
   logger: {
@@ -48,8 +50,8 @@ app.addHook("onRequest", async (request, reply) => {
     return;
   }
 
-  // Check dynamically generated keys from keyStore
-  const keyEntry = lookupKey(apiKey);
+  // Check dynamically generated keys from keyStore (DB + memory)
+  const keyEntry = await lookupKeyAsync(apiKey);
   if (!keyEntry) {
     return reply.code(401).send({ error: "Unauthorized: invalid or missing API key" });
   }
@@ -68,6 +70,12 @@ app.addHook("onRequest", async (request, reply) => {
 
   // Increment usage
   incrementUsage(apiKey);
+});
+
+// API version + rate-limit headers
+app.addHook("onSend", async (request, reply) => {
+  reply.header("X-API-Version", "1.0.0");
+  reply.header("X-Powered-By", "ChronoGuard");
 });
 
 // Request logging hook
@@ -106,7 +114,10 @@ async function start() {
         description: "DST-aware datetime validation, resolution, and conversion API",
         version: "1.0.0",
       },
-      servers: [{ url: `http://localhost:${config.port}` }],
+      servers: [
+        { url: config.baseUrl, description: "Production" },
+        { url: `http://localhost:${config.port}`, description: "Local development" },
+      ],
       components: {
         securitySchemes: {
           apiKey: {
@@ -145,15 +156,35 @@ async function start() {
   await app.register(validateRoute);
   await app.register(resolveRoute);
   await app.register(convertRoute);
+  await app.register(batchRoute);
   await app.register(keysRoute);
 
   // Stripe webhook needs its own encapsulated context for raw body parsing
   await app.register(webhooksRoute);
 
+  // Connect to DB if configured
+  const prisma = getPrisma();
+  if (prisma) {
+    await prisma.$connect();
+    console.log("Connected to PostgreSQL");
+  } else {
+    console.log("No DATABASE_URL set — using in-memory key store");
+  }
+
   await app.listen({ port: config.port, host: config.host });
   console.log(`ChronoGuard API running at http://localhost:${config.port}`);
   console.log(`API docs at http://localhost:${config.port}/docs`);
 }
+
+// Graceful shutdown
+async function shutdown(signal: string) {
+  console.log(`Received ${signal}, shutting down gracefully...`);
+  await app.close();
+  await disconnectPrisma();
+  process.exit(0);
+}
+process.on("SIGINT", () => shutdown("SIGINT"));
+process.on("SIGTERM", () => shutdown("SIGTERM"));
 
 start().catch((err) => {
   console.error("Failed to start server:", err);

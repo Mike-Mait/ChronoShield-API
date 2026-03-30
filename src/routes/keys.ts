@@ -1,57 +1,222 @@
 import { FastifyInstance } from "fastify";
 import crypto from "crypto";
 import { config } from "../config/env";
+import { getPrisma } from "../db/client";
 
-/**
- * In-memory store for MVP. In production, use Postgres via Prisma.
- * Maps email -> { apiKey, tier, requestsUsed, requestsLimit, createdAt }
- */
-const keyStore = new Map<
-  string,
-  {
-    email: string;
-    apiKey: string;
-    tier: "free" | "pro";
-    requestsUsed: number;
-    requestsLimit: number;
-    stripeCustomerId?: string;
-    createdAt: Date;
-  }
->();
+// ─── Types ───
+interface KeyEntry {
+  email: string;
+  apiKey: string;
+  tier: "free" | "pro";
+  requestsUsed: number;
+  requestsLimit: number;
+  stripeCustomerId?: string;
+  createdAt: Date;
+}
 
-// Also index by API key for lookups
-const keyIndex = new Map<string, string>(); // apiKey -> email
+// ─── In-memory fallback (used when DATABASE_URL is not set) ───
+const memoryKeyStore = new Map<string, KeyEntry>();
+const memoryKeyIndex = new Map<string, string>(); // apiKey -> email
 
+// ─── Key generation ───
 export function generateApiKey(): string {
   const prefix = "cg_live_";
   const random = crypto.randomBytes(24).toString("base64url");
   return `${prefix}${random}`;
 }
 
-export function lookupKey(apiKey: string) {
-  const email = keyIndex.get(apiKey);
-  if (!email) return null;
-  return keyStore.get(email) || null;
+function hashKey(apiKey: string): string {
+  return crypto.createHash("sha256").update(apiKey).digest("hex");
 }
 
-export function incrementUsage(apiKey: string) {
-  const email = keyIndex.get(apiKey);
-  if (!email) return;
-  const entry = keyStore.get(email);
-  if (entry) {
-    entry.requestsUsed++;
+// ─── Lookup: checks Prisma first, falls back to in-memory ───
+export async function lookupKeyAsync(apiKey: string): Promise<KeyEntry | null> {
+  const prisma = getPrisma();
+  if (prisma) {
+    try {
+      const record = await prisma.apiKey.findUnique({
+        where: { keyHash: hashKey(apiKey) },
+      });
+      if (!record || !record.active) return null;
+      return {
+        email: record.email,
+        apiKey, // we don't store the raw key, but the caller already has it
+        tier: record.tier as "free" | "pro",
+        requestsUsed: record.requestsUsed,
+        requestsLimit: record.requestsLimit,
+        stripeCustomerId: record.stripeCustomerId ?? undefined,
+        createdAt: record.createdAt,
+      };
+    } catch {
+      // DB error — fall through to memory
+    }
+  }
+
+  // Fallback to in-memory
+  const email = memoryKeyIndex.get(apiKey);
+  if (!email) return null;
+  return memoryKeyStore.get(email) || null;
+}
+
+// Synchronous wrapper for auth hook compatibility
+// Uses a cached Map that's populated on key creation and lookup
+const keyCache = new Map<string, KeyEntry>();
+
+export function lookupKey(apiKey: string): KeyEntry | null {
+  return keyCache.get(apiKey) || null;
+}
+
+// ─── Increment usage ───
+export async function incrementUsageAsync(apiKey: string): Promise<void> {
+  const prisma = getPrisma();
+  if (prisma) {
+    try {
+      await prisma.apiKey.update({
+        where: { keyHash: hashKey(apiKey) },
+        data: { requestsUsed: { increment: 1 } },
+      });
+    } catch {
+      // DB error — fall through to memory
+    }
+  }
+
+  // Also update memory/cache
+  const cached = keyCache.get(apiKey);
+  if (cached) cached.requestsUsed++;
+
+  const email = memoryKeyIndex.get(apiKey);
+  if (email) {
+    const entry = memoryKeyStore.get(email);
+    if (entry) entry.requestsUsed++;
   }
 }
 
-export function upgradeToProByEmail(email: string, stripeCustomerId: string) {
-  const entry = keyStore.get(email);
+export function incrementUsage(apiKey: string): void {
+  // Fire and forget the async version
+  incrementUsageAsync(apiKey).catch(() => {});
+}
+
+// ─── Upgrade to Pro ───
+export async function upgradeToProByEmail(email: string, stripeCustomerId: string): Promise<void> {
+  const prisma = getPrisma();
+  if (prisma) {
+    try {
+      await prisma.apiKey.update({
+        where: { email },
+        data: {
+          tier: "pro",
+          requestsLimit: 100_000,
+          stripeCustomerId,
+        },
+      });
+    } catch {
+      // DB error — fall through to memory
+    }
+  }
+
+  // Also update memory/cache
+  const entry = memoryKeyStore.get(email);
   if (entry) {
     entry.tier = "pro";
     entry.requestsLimit = 100_000;
     entry.stripeCustomerId = stripeCustomerId;
+    const cached = keyCache.get(entry.apiKey);
+    if (cached) {
+      cached.tier = "pro";
+      cached.requestsLimit = 100_000;
+      cached.stripeCustomerId = stripeCustomerId;
+    }
   }
 }
 
+// ─── Create or retrieve a key ───
+async function createOrGetKey(
+  email: string,
+  tier: "free" | "pro"
+): Promise<{ apiKey: string; isExisting: boolean; entry: KeyEntry }> {
+  const prisma = getPrisma();
+
+  // Check Prisma first
+  if (prisma) {
+    try {
+      const existing = await prisma.apiKey.findUnique({ where: { email } });
+      if (existing) {
+        // Can't recover the raw key from hash — so we check memory
+        const memEntry = memoryKeyStore.get(email);
+        if (memEntry) {
+          return { apiKey: memEntry.apiKey, isExisting: true, entry: memEntry };
+        }
+        // Key exists in DB but not in memory (server restarted).
+        // Generate a new key and update the DB record.
+        const newKey = generateApiKey();
+        await prisma.apiKey.update({
+          where: { email },
+          data: { keyHash: hashKey(newKey) },
+        });
+        const entry: KeyEntry = {
+          email,
+          apiKey: newKey,
+          tier: existing.tier as "free" | "pro",
+          requestsUsed: existing.requestsUsed,
+          requestsLimit: existing.requestsLimit,
+          stripeCustomerId: existing.stripeCustomerId ?? undefined,
+          createdAt: existing.createdAt,
+        };
+        memoryKeyStore.set(email, entry);
+        memoryKeyIndex.set(newKey, email);
+        keyCache.set(newKey, entry);
+        return { apiKey: newKey, isExisting: true, entry };
+      }
+    } catch {
+      // DB error — fall through to memory-only
+    }
+  }
+
+  // Check memory
+  const memExisting = memoryKeyStore.get(email);
+  if (memExisting) {
+    return { apiKey: memExisting.apiKey, isExisting: true, entry: memExisting };
+  }
+
+  // Create new key
+  const apiKey = generateApiKey();
+  const limit = tier === "pro" ? 100_000 : 1_000;
+  const entry: KeyEntry = {
+    email,
+    apiKey,
+    tier: tier === "pro" ? "free" : "free", // start as free until payment
+    requestsUsed: 0,
+    requestsLimit: limit,
+    createdAt: new Date(),
+  };
+
+  // Persist to DB
+  if (prisma) {
+    try {
+      await prisma.apiKey.create({
+        data: {
+          email,
+          keyHash: hashKey(apiKey),
+          tier: "free",
+          requestsUsed: 0,
+          requestsLimit: 1_000,
+        },
+      });
+    } catch {
+      // DB error — continue with memory only
+    }
+  }
+
+  // Always store in memory + cache
+  entry.requestsLimit = 1_000; // always start as free
+  memoryKeyStore.set(email, entry);
+  memoryKeyIndex.set(apiKey, email);
+  keyCache.set(apiKey, entry);
+
+  return { apiKey, isExisting: false, entry };
+}
+
+// ─── Route ───
 export async function keysRoute(app: FastifyInstance) {
   app.post(
     "/api/keys",
@@ -66,30 +231,14 @@ export async function keysRoute(app: FastifyInstance) {
         return (reply as any).code(400).send({ error: "Valid email is required" });
       }
 
-      // Check if user already has a key
-      const existing = keyStore.get(email);
+      const { apiKey, isExisting, entry } = await createOrGetKey(
+        email,
+        (tier as "free" | "pro") || "free"
+      );
 
       if (tier === "pro") {
-        // Generate key now, but mark as free until payment completes
-        let apiKey: string;
-        if (existing) {
-          apiKey = existing.apiKey;
-        } else {
-          apiKey = generateApiKey();
-          keyStore.set(email, {
-            email,
-            apiKey,
-            tier: "free",
-            requestsUsed: 0,
-            requestsLimit: 1_000,
-            createdAt: new Date(),
-          });
-          keyIndex.set(apiKey, email);
-        }
-
         // Create Stripe Checkout session
         if (!config.stripeSecretKey) {
-          // Stripe not configured — return key directly as free tier
           return reply.send({
             api_key: apiKey,
             tier: "free",
@@ -129,25 +278,14 @@ export async function keysRoute(app: FastifyInstance) {
       }
 
       // Free tier
-      if (existing) {
+      if (isExisting) {
         return reply.send({
-          api_key: existing.apiKey,
-          tier: existing.tier,
-          requests_limit: existing.requestsLimit,
+          api_key: apiKey,
+          tier: entry.tier,
+          requests_limit: entry.requestsLimit,
           message: "Existing key returned.",
         });
       }
-
-      const apiKey = generateApiKey();
-      keyStore.set(email, {
-        email,
-        apiKey,
-        tier: "free",
-        requestsUsed: 0,
-        requestsLimit: 1_000,
-        createdAt: new Date(),
-      });
-      keyIndex.set(apiKey, email);
 
       return reply.send({
         api_key: apiKey,

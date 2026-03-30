@@ -36,5 +36,38 @@
       },
       "required": ["instant_utc", "target_time_zone"]
     }
+  },
+  {
+    "name": "batch_datetime_operations",
+    "description": "Process up to 100 validate, resolve, and convert operations in a single request. Use this when you need to check multiple datetimes at once (e.g. validating all events in a calendar import).",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "description": "Array of operations (max 100). Each item must include 'operation' (validate/resolve/convert) and the relevant fields.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "operation": { "type": "string", "enum": ["validate", "resolve", "convert"] },
+              "local_datetime": { "type": "string", "description": "For validate/resolve: ISO 8601 local datetime" },
+              "time_zone": { "type": "string", "description": "For validate/resolve: IANA timezone identifier" },
+              "instant_utc": { "type": "string", "description": "For convert: ISO 8601 UTC datetime" },
+              "target_time_zone": { "type": "string", "description": "For convert: IANA timezone identifier" },
+              "resolution_policy": {
+                "type": "object",
+                "description": "For resolve: ambiguous/invalid policies",
+                "properties": {
+                  "ambiguous": { "type": "string", "enum": ["earlier", "later", "reject"] },
+                  "invalid": { "type": "string", "enum": ["next_valid_time", "previous_valid_time", "reject"] }
+                }
+              }
+            },
+            "required": ["operation"]
+          }
+        }
+      },
+      "required": ["items"]
+    }
   }
 ]
