@@ -132,6 +132,83 @@ describe("Edge Cases: Unusual DST Regimes", () => {
     });
   });
 
+  describe("Africa/Casablanca — Morocco (Ramadan-linked DST suspension)", () => {
+    // Morocco uses UTC+1 year-round since 2018 but suspends DST during Ramadan
+    // returning briefly to UTC+0. Unusual policy-driven transitions.
+
+    it("validates normal time in Casablanca", () => {
+      const result = validateDateTime("2026-07-15T12:00:00", "Africa/Casablanca");
+      expect(result.status).toBe(DateTimeStatus.VALID);
+    });
+
+    it("converts UTC to Casablanca correctly", () => {
+      const result = convertTime("2026-07-15T00:00:00Z", "Africa/Casablanca");
+      expect(result.local_datetime).toMatch(/^2026-07-15T0[01]:/);
+    });
+  });
+
+  describe("Pacific/Fiji — Southern hemisphere DST with extreme positive offset", () => {
+    // Fiji: UTC+12 (standard) / UTC+13 (DST), DST Nov–Jan
+    it("converts UTC to Fiji during standard time", () => {
+      const result = convertTime("2026-06-15T00:00:00Z", "Pacific/Fiji");
+      expect(result.local_datetime).toBe("2026-06-15T12:00:00");
+      expect(result.offset).toBe("+12:00");
+    });
+
+    it("handles Fiji consistently year-round", () => {
+      // Fiji suspended DST after 2022 — verify it stays at +12:00
+      const result = convertTime("2026-12-15T00:00:00Z", "Pacific/Fiji");
+      expect(result.local_datetime).toBe("2026-12-15T12:00:00");
+      expect(result.offset).toBe("+12:00");
+    });
+  });
+
+  describe("America/Santiago — Chile (Southern hemisphere, unique transition dates)", () => {
+    // Chile: UTC-4 (standard) / UTC-3 (DST), transitions first Sat of April/September
+    it("validates normal time in Santiago", () => {
+      const result = validateDateTime("2026-07-15T12:00:00", "America/Santiago");
+      expect(result.status).toBe(DateTimeStatus.VALID);
+    });
+
+    it("resolves Santiago time to correct UTC during winter", () => {
+      // July = Chilean winter = standard time (UTC-4)
+      const result = resolveDateTime("2026-07-15T12:00:00", "America/Santiago", {
+        ambiguous: "earlier",
+        invalid: "next_valid_time",
+      });
+      expect(result.instant_utc).toBe("2026-07-15T16:00:00.000Z");
+      expect(result.offset).toBe("-04:00");
+    });
+  });
+
+  describe("Cross-zone batch-style conversions", () => {
+    it("same UTC instant produces different local times across 5 zones", () => {
+      const utc = "2026-06-15T12:00:00Z";
+      const zones = [
+        { tz: "America/Los_Angeles", expected: "2026-06-15T05:00:00" },
+        { tz: "America/New_York", expected: "2026-06-15T08:00:00" },
+        { tz: "Europe/London", expected: "2026-06-15T13:00:00" },
+        { tz: "Asia/Tokyo", expected: "2026-06-15T21:00:00" },
+        { tz: "Pacific/Auckland", expected: "2026-06-16T00:00:00" },
+      ];
+      for (const { tz, expected } of zones) {
+        const result = convertTime(utc, tz);
+        expect(result.local_datetime).toBe(expected);
+      }
+    });
+
+    it("round-trips local → UTC → local without drift", () => {
+      const localTime = "2026-08-20T14:30:00";
+      const tz = "Europe/Berlin";
+      const resolved = resolveDateTime(localTime, tz, {
+        ambiguous: "earlier",
+        invalid: "next_valid_time",
+      });
+      const converted = convertTime(resolved.instant_utc, tz);
+      expect(converted.local_datetime).toBe(localTime);
+    });
+  });
+
   describe("Temporal boundary conditions", () => {
     it("handles midnight on DST transition day", () => {
       // Midnight is before the 2 AM gap, so it should be valid

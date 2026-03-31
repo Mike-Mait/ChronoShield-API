@@ -66,7 +66,12 @@
         </svg>
         <span class="text-lg font-bold tracking-tight text-white">Chrono<span class="text-brand-400">Guard</span></span>
       </div>
-      <a href="/docs" class="text-xs text-slate-500 hover:text-slate-300 transition-colors font-medium">API Docs</a>
+      <div class="flex items-center gap-5 text-xs font-medium">
+        <a href="/docs" class="text-slate-500 hover:text-slate-300 transition-colors">Docs</a>
+        <a href="/docs/playground" class="text-slate-500 hover:text-slate-300 transition-colors">Playground</a>
+        <a href="/status" class="text-slate-500 hover:text-slate-300 transition-colors">Status</a>
+        <a href="https://github.com/Mike-Mait/ChronoGuard" class="text-slate-500 hover:text-slate-300 transition-colors">GitHub</a>
+      </div>
     </div>
   </header>
 
@@ -318,9 +323,9 @@
     <p class="text-slate-400 text-center mb-10 text-sm max-w-2xl mx-auto">ChronoGuard isn't a thin layer over a timezone library. It's correctness infrastructure with the operational maturity to match.</p>
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <div class="rounded-lg border border-slate-800 bg-slate-900/30 p-4 text-center">
-        <div class="text-2xl font-extrabold text-white">55</div>
+        <div class="text-2xl font-extrabold text-white">63</div>
         <div class="text-xs text-slate-500 mt-1">tests passing</div>
-        <div class="text-[10px] text-slate-600 mt-0.5">Including adversarial DST edge cases across 6 timezone regimes</div>
+        <div class="text-[10px] text-slate-600 mt-0.5">Including adversarial DST edge cases across 9 timezone regimes</div>
       </div>
       <div class="rounded-lg border border-slate-800 bg-slate-900/30 p-4 text-center">
         <div class="text-2xl font-extrabold text-white">&lt;50ms</div>
@@ -397,9 +402,9 @@
         </div>
         <ul class="mt-6 space-y-3 text-sm text-slate-400 flex-1">
           <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>100,000 requests / month</li>
-          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>All endpoints + batch</li>
-          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Persistent key &amp; usage storage</li>
-          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Priority email support</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Batch up to 100 ops in one call</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Keys survive redeploys &mdash; PostgreSQL-backed</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Usage dashboard &amp; priority support</li>
         </ul>
         <button onclick="openModal('pro')" class="mt-8 w-full py-3 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm transition-colors shadow-lg shadow-brand-500/25 cursor-pointer">
           Get Pro API Key
@@ -408,6 +413,30 @@
     </div>
 
     <p class="text-center text-xs text-slate-600 mt-8">Need more? <a href="mailto:mikemaittech@gmail.com" class="text-brand-400 hover:underline">Contact us</a> for custom enterprise pricing.</p>
+  </section>
+
+  <!-- ─── DIG DEEPER ─── -->
+  <section class="max-w-4xl mx-auto px-6 py-16">
+    <h2 class="text-2xl font-bold text-center mb-2">Dig deeper</h2>
+    <p class="text-slate-400 text-center mb-8 text-sm">Everything you need to evaluate, integrate, and ship with confidence.</p>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <a href="/docs" class="group rounded-xl border border-slate-800 bg-slate-900/30 hover:border-brand-500/40 p-5 transition-colors">
+        <div class="text-brand-400 text-sm font-semibold mb-1 group-hover:text-brand-300">API Documentation</div>
+        <p class="text-xs text-slate-500 leading-relaxed">Endpoints, parameters, error codes, and SDK quickstart guides.</p>
+      </a>
+      <a href="/docs/playground" class="group rounded-xl border border-slate-800 bg-slate-900/30 hover:border-brand-500/40 p-5 transition-colors">
+        <div class="text-brand-400 text-sm font-semibold mb-1 group-hover:text-brand-300">API Playground</div>
+        <p class="text-xs text-slate-500 leading-relaxed">Try every endpoint live in the browser. No setup required.</p>
+      </a>
+      <a href="/status" class="group rounded-xl border border-slate-800 bg-slate-900/30 hover:border-brand-500/40 p-5 transition-colors">
+        <div class="text-brand-400 text-sm font-semibold mb-1 group-hover:text-brand-300">Live Status</div>
+        <p class="text-xs text-slate-500 leading-relaxed">Uptime, database health, and version info &mdash; updated in real time.</p>
+      </a>
+      <a href="https://github.com/Mike-Mait/ChronoGuard/blob/master/CHANGELOG.md" class="group rounded-xl border border-slate-800 bg-slate-900/30 hover:border-brand-500/40 p-5 transition-colors">
+        <div class="text-brand-400 text-sm font-semibold mb-1 group-hover:text-brand-300">Changelog</div>
+        <p class="text-xs text-slate-500 leading-relaxed">Every feature, fix, and improvement. Versioned and dated.</p>
+      </a>
+    </div>
   </section>
 
   <!-- ─── FOOTER ─── -->
