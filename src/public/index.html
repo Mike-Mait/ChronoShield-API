@@ -88,12 +88,15 @@
         <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-brand-200">timezone bug</span> again.
       </h1>
       <p class="fade-up fade-up-d2 mt-6 text-lg text-slate-400 max-w-xl mx-auto leading-relaxed">
-        One API to validate, resolve, and convert datetimes across every IANA timezone &mdash; with explicit handling of DST gaps, overlaps, and ambiguity. Half-hour offsets, 45-minute offsets, 30-minute DST shifts &mdash; all covered.
+        One API to validate, resolve, and convert datetimes across every IANA timezone &mdash; with explicit handling of DST gaps, overlaps, and ambiguity. Half-hour offsets, 45-minute offsets, 30-minute DST shifts (e.g. Nepal, Lord Howe) &mdash; all covered.
       </p>
       <div class="fade-up fade-up-d3 mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <a href="#pricing" class="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm transition-colors shadow-lg shadow-brand-500/25">
-          Get Free API Key
-        </a>
+        <div class="flex flex-col items-center">
+          <a href="#pricing" class="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm transition-colors shadow-lg shadow-brand-500/25">
+            Get Free API Key
+          </a>
+          <span class="text-[10px] text-slate-600 mt-2">No credit card required</span>
+        </div>
         <a href="#examples" class="w-full sm:w-auto px-8 py-3.5 rounded-lg border border-slate-700 hover:border-slate-500 text-slate-300 font-semibold text-sm transition-colors">
           See Examples
         </a>
@@ -109,7 +112,7 @@
     <div class="grid sm:grid-cols-3 gap-5">
       <div class="rounded-xl border border-red-500/20 bg-red-500/5 p-5 text-center">
         <div class="text-red-400 text-xs font-bold uppercase tracking-wider mb-2">DST Gap</div>
-        <p class="text-sm text-slate-300 leading-relaxed mb-3">User books a meeting at <code class="text-red-300 bg-red-500/10 px-1 rounded">2:30 AM</code> on spring-forward day. That time doesn't exist. Your app stores it anyway.</p>
+        <p class="text-sm text-slate-300 leading-relaxed mb-3">User books a meeting at <code class="text-red-300 bg-red-500/10 px-1 rounded">2:30 AM</code> on spring-forward day. That time doesn't exist. Most libraries silently shift it to 3:30 AM. Your app stores it with no warning.</p>
         <p class="text-xs text-red-400/70 font-medium">Missed standups. No-show clients. Support tickets you can't explain.</p>
       </div>
       <div class="rounded-xl border border-amber-500/20 bg-amber-500/5 p-5 text-center">
@@ -172,6 +175,11 @@
           <span class="text-slate-500">&rarr;</span>
           <span class="text-slate-400">"I already have UTC. What's the local time in this timezone?"</span>
         </div>
+        <div class="flex items-start gap-3">
+          <span class="text-brand-400 font-mono text-xs mt-0.5 shrink-0 w-16 text-right">batch</span>
+          <span class="text-slate-500">&rarr;</span>
+          <span class="text-slate-400">"I need to validate, resolve, or convert many times in one call."</span>
+        </div>
       </div>
     </div>
   </section>
@@ -215,7 +223,14 @@
   <!-- ─── QUICK INTEGRATION ─── -->
   <section class="max-w-3xl mx-auto px-6 py-10">
     <h2 class="text-2xl font-bold text-center mb-2">Integrate in under 5 minutes</h2>
-    <p class="text-slate-400 text-center mb-8 text-sm">One API key. One HTTP call. Instant value.</p>
+    <p class="text-slate-400 text-center mb-3 text-sm">One API key. One HTTP call. Instant value.</p>
+    <div class="flex items-center justify-center gap-4 mb-8 text-xs text-slate-500">
+      <span class="flex items-center gap-1.5"><span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-brand-500/20 text-brand-300 text-[10px] font-bold">1</span> Install SDK</span>
+      <span class="text-slate-700">&rarr;</span>
+      <span class="flex items-center gap-1.5"><span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-brand-500/20 text-brand-300 text-[10px] font-bold">2</span> Create client</span>
+      <span class="text-slate-700">&rarr;</span>
+      <span class="flex items-center gap-1.5"><span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-brand-500/20 text-brand-300 text-[10px] font-bold">3</span> Validate a risky time</span>
+    </div>
 
     <!-- Language tabs -->
     <div class="flex gap-1 mb-4 bg-slate-900 rounded-lg p-1 border border-slate-800">
@@ -231,7 +246,7 @@
       </div>
       <div class="rounded-xl border border-slate-800 bg-slate-900 overflow-hidden">
         <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
-          <span class="text-[10px] font-bold tracking-wider uppercase text-brand-400">TypeScript &mdash; 3 lines</span>
+          <span class="text-[10px] font-bold tracking-wider uppercase text-brand-400">TypeScript &mdash; minimal example</span>
         </div>
         <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">import</span> { ChronoGuardClient } <span class="text-slate-500">from</span> <span class="text-emerald-300">"chronoguard"</span>;
 <span class="text-slate-500">const</span> cg = <span class="text-slate-500">new</span> ChronoGuardClient({ apiKey: <span class="text-emerald-300">"YOUR_KEY"</span> });
@@ -251,7 +266,7 @@
       </div>
       <div class="rounded-xl border border-slate-800 bg-slate-900 overflow-hidden">
         <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
-          <span class="text-[10px] font-bold tracking-wider uppercase text-brand-400">Python &mdash; 3 lines</span>
+          <span class="text-[10px] font-bold tracking-wider uppercase text-brand-400">Python &mdash; minimal example</span>
         </div>
         <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">from</span> chronoguard <span class="text-slate-500">import</span> ChronoGuardClient
 cg = ChronoGuardClient(<span class="text-emerald-300">"YOUR_KEY"</span>)
@@ -482,7 +497,7 @@ result = cg.validate(
           <span class="text-slate-500 text-sm">/month</span>
           <span class="text-slate-600 text-xs ml-1">($228/yr)</span>
         </div>
-        <p class="text-xs text-slate-500 mt-2">Ship with confidence. Never debug a DST incident again.</p>
+        <p class="text-xs text-slate-500 mt-2">Self-serve production. Never debug a DST incident again.</p>
         <ul class="mt-6 space-y-3 text-sm text-slate-400 flex-1">
           <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>100,000 requests / month</li>
           <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Batch up to 100 ops in one call</li>
@@ -499,7 +514,8 @@ result = cg.validate(
     <!-- Enterprise tiers -->
     <div class="mt-16">
       <h3 class="text-xl font-bold text-center text-white mb-2">Enterprise</h3>
-      <p class="text-slate-400 text-center mb-10 text-sm max-w-xl mx-auto">Annual contracts with committed usage, predictable procurement, and the operational guarantees production teams need.</p>
+      <p class="text-slate-400 text-center mb-3 text-sm max-w-xl mx-auto">Procurement-ready production. Annual contracts with committed usage and the operational guarantees your team needs.</p>
+      <p class="text-center mb-10 text-xs text-slate-600">Move to Enterprise when you need annual billing, procurement support, SLAs, or higher annual volume.</p>
 
       <div class="grid sm:grid-cols-3 gap-6">
         <!-- Enterprise Starter -->
