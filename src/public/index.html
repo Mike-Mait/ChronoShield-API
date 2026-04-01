@@ -90,16 +90,16 @@
       <p class="fade-up fade-up-d2 mt-6 text-lg text-slate-400 max-w-xl mx-auto leading-relaxed">
         One API to validate, resolve, and convert datetimes across every IANA timezone &mdash; with explicit handling of DST gaps, overlaps, and ambiguity. Half-hour offsets, 45-minute offsets, 30-minute DST shifts (e.g. Nepal, Lord Howe) &mdash; all covered.
       </p>
-      <div class="fade-up fade-up-d3 mt-10 flex flex-col items-center">
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <div class="fade-up fade-up-d3 mt-10 flex flex-col sm:flex-row items-start justify-center gap-4">
+        <div class="flex flex-col items-center w-full sm:w-auto">
           <a href="#pricing" class="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm transition-colors shadow-lg shadow-brand-500/25">
             Get Free API Key
           </a>
-          <a href="#examples" class="w-full sm:w-auto px-8 py-3.5 rounded-lg border border-slate-700 hover:border-slate-500 text-slate-300 font-semibold text-sm transition-colors">
-            See Examples
-          </a>
+          <span class="text-[10px] text-slate-600 mt-2">No credit card required</span>
         </div>
-        <span class="text-[10px] text-slate-600 mt-3">No credit card required</span>
+        <a href="#examples" class="w-full sm:w-auto px-8 py-3.5 rounded-lg border border-slate-700 hover:border-slate-500 text-slate-300 font-semibold text-sm transition-colors">
+          See Examples
+        </a>
       </div>
       <p class="fade-up fade-up-d3 mt-6 text-xs text-slate-500">Not needed for simple UTC display formatting. Built for apps that interpret and act on user-entered local times.</p>
     </div>
@@ -440,7 +440,7 @@ result = cg.validate(
       </div>
       <div class="rounded-lg border border-slate-800 bg-slate-900/30 p-4 text-center">
         <div class="text-2xl font-extrabold text-white flex items-center justify-center gap-1">
-          <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <svg class="w-7 h-7 text-emerald-400" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
         </div>
         <div class="text-xs text-slate-500 mt-1">persistent storage</div>
         <div class="text-[10px] text-slate-600 mt-0.5">PostgreSQL-backed keys &amp; usage. <a href="/status" class="text-brand-400 hover:underline">Live status</a></div>
@@ -485,16 +485,22 @@ result = cg.validate(
           <span class="text-4xl font-extrabold text-white">$0</span>
           <span class="text-slate-500 text-sm">/month</span>
         </div>
-        <p class="text-xs text-slate-500 mt-2">Prove it works. No credit card required.</p>
-        <ul class="mt-6 space-y-3 text-sm text-slate-400 flex-1">
+        <!-- Fixed-height tagline zone -->
+        <div class="h-10 flex items-start">
+          <p class="text-xs text-slate-500 mt-2">Prove it works. No credit card required.</p>
+        </div>
+        <ul class="mt-6 space-y-3 text-sm text-slate-400">
           <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>1,000 requests / month</li>
           <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>All endpoints + batch</li>
           <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Community support</li>
+          <li class="invisible flex items-start gap-2"><svg class="w-4 h-4 mt-0.5 shrink-0" viewBox="0 0 24 24"></svg>&nbsp;</li>
         </ul>
-        <button onclick="openModal('free')" class="mt-8 w-full py-3 rounded-lg border border-slate-700 hover:border-slate-500 text-white font-semibold text-sm transition-colors cursor-pointer">
-          Get Free API Key
-        </button>
-        <p class="text-[10px] text-slate-600 mt-3 text-center">Perfect for prototyping and validating the integration.</p>
+        <div class="mt-auto pt-8">
+          <button onclick="openModal('free')" class="w-full py-3 rounded-lg border border-slate-700 hover:border-slate-500 text-white font-semibold text-sm transition-colors cursor-pointer">
+            Get Free API Key
+          </button>
+          <p class="text-[10px] text-slate-600 mt-3 text-center">Perfect for prototyping and validating the integration.</p>
+        </div>
       </div>
 
       <!-- Pro -->
@@ -506,17 +512,22 @@ result = cg.validate(
           <span class="text-slate-500 text-sm">/month</span>
           <span class="text-slate-600 text-xs ml-1">($228/yr)</span>
         </div>
-        <p class="text-xs text-slate-500 mt-2">Self-serve production. Never debug a DST incident again.</p>
-        <ul class="mt-6 space-y-3 text-sm text-slate-400 flex-1">
+        <!-- Fixed-height tagline zone (matches Free) -->
+        <div class="h-10 flex items-start">
+          <p class="text-xs text-slate-500 mt-2">Self-serve production. Never debug a DST incident again.</p>
+        </div>
+        <ul class="mt-6 space-y-3 text-sm text-slate-400">
           <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>100,000 requests / month</li>
           <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Batch up to 100 ops in one call</li>
           <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Keys survive redeploys &mdash; PostgreSQL-backed</li>
           <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Usage dashboard &amp; priority support</li>
         </ul>
-        <button onclick="openModal('pro')" class="mt-8 w-full py-3 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm transition-colors shadow-lg shadow-brand-500/25 cursor-pointer">
-          Get Pro API Key
-        </button>
-        <p class="text-[10px] text-slate-600 mt-3 text-center">Best for scheduling, booking, billing, and workflow apps that accept user-entered times.</p>
+        <div class="mt-auto pt-8">
+          <button onclick="openModal('pro')" class="w-full py-3 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm transition-colors shadow-lg shadow-brand-500/25 cursor-pointer">
+            Get Pro API Key
+          </button>
+          <p class="text-[10px] text-slate-600 mt-3 text-center">Best for scheduling, booking, billing, and workflow apps that accept user-entered times.</p>
+        </div>
       </div>
     </div>
 
