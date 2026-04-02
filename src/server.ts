@@ -165,6 +165,11 @@ async function start() {
       uptime_seconds: uptimeSec,
       started_at: startedAt.toISOString(),
       database: dbStatus,
+      timezone_data: {
+        iana_version: process.versions.tz || "unknown",
+        icu_version: process.versions.icu || "unknown",
+        node_version: process.version,
+      },
       endpoints: {
         validate: "/v1/datetime/validate",
         resolve: "/v1/datetime/resolve",
