@@ -26,7 +26,7 @@ const app = Fastify({
 });
 
 // Paths that skip API key auth
-const publicPaths = ["/health", "/status", "/docs", "/api/keys", "/api/webhooks", "/docs/playground"];
+const publicPaths = ["/health", "/status", "/docs", "/api/keys", "/api/webhooks", "/docs/playground", "/terms", "/privacy"];
 
 // API key auth hook
 app.addHook("onRequest", async (request, reply) => {
@@ -185,6 +185,20 @@ async function start() {
   // Custom docs page
   app.get("/docs", { schema: { hide: true } }, async (_request, reply) => {
     const htmlPath = path.join(__dirname, "public", "docs.html");
+    const html = fs.readFileSync(htmlPath, "utf-8");
+    return reply.type("text/html").send(html);
+  });
+
+  // Terms of Service
+  app.get("/terms", { schema: { hide: true } }, async (_request, reply) => {
+    const htmlPath = path.join(__dirname, "public", "terms.html");
+    const html = fs.readFileSync(htmlPath, "utf-8");
+    return reply.type("text/html").send(html);
+  });
+
+  // Privacy Policy
+  app.get("/privacy", { schema: { hide: true } }, async (_request, reply) => {
+    const htmlPath = path.join(__dirname, "public", "privacy.html");
     const html = fs.readFileSync(htmlPath, "utf-8");
     return reply.type("text/html").send(html);
   });

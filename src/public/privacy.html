@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy &mdash; ChronoGuard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50:'#eef6ff', 100:'#d9eaff', 200:'#bcdaff', 300:'#8ec2ff', 400:'#59a0ff', 500:'#3378ff', 600:'#1b57f5', 700:'#1543e1', 800:'#1837b6', 900:'#1a328f', 950:'#141f57' },
+          },
+          fontFamily: { mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'] },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .sidebar-link { transition: color .15s; }
+    .sidebar-link:hover, .sidebar-link.active { color: #59a0ff; }
+  </style>
+</head>
+<body class="bg-brand-950 text-white antialiased">
+
+  <!-- ─── TOP BAR ─── -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-brand-950/90 backdrop-blur-md border-b border-slate-800/60">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+          <path d="M32 4L8 16v16c0 14.4 10.24 27.84 24 32 13.76-4.16 24-17.6 24-32V16L32 4z" fill="url(#shield-grad)" stroke="url(#shield-stroke)" stroke-width="2"/>
+          <circle cx="32" cy="32" r="13" fill="#0f172a" stroke="#8ec2ff" stroke-width="1.5" opacity=".9"/>
+          <line x1="32" y1="21" x2="32" y2="23" stroke="#8ec2ff" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="32" y1="41" x2="32" y2="43" stroke="#8ec2ff" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="21" y1="32" x2="23" y2="32" stroke="#8ec2ff" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="41" y1="32" x2="43" y2="32" stroke="#8ec2ff" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="32" y1="32" x2="32" y2="25" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <line x1="32" y1="32" x2="38" y2="28" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="32" cy="32" r="1.5" fill="white"/>
+          <defs>
+            <linearGradient id="shield-grad" x1="8" y1="4" x2="56" y2="64" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3378ff" stop-opacity=".15"/><stop offset="1" stop-color="#8ec2ff" stop-opacity=".05"/>
+            </linearGradient>
+            <linearGradient id="shield-stroke" x1="8" y1="4" x2="56" y2="64" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3378ff"/><stop offset="1" stop-color="#8ec2ff"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <a href="/" class="text-lg font-bold tracking-tight text-white">Chrono<span class="text-brand-400">Guard</span></a>
+      </div>
+      <nav class="flex items-center gap-6 text-sm text-slate-400">
+        <a href="/docs" class="hover:text-white transition-colors">Docs</a>
+        <a href="/docs/playground" class="hover:text-white transition-colors">Playground</a>
+        <a href="/status" class="hover:text-white transition-colors">Status</a>
+        <a href="https://github.com/Mike-Mait/ChronoGuard" class="hover:text-white transition-colors">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ─── MAIN CONTENT ─── -->
+  <div class="pt-24 pb-16 max-w-5xl mx-auto px-6 flex gap-12">
+
+    <!-- Sidebar -->
+    <aside class="hidden lg:block w-56 shrink-0">
+      <nav class="sticky top-28 space-y-2 text-sm text-slate-500">
+        <a href="#introduction" class="sidebar-link block">Introduction</a>
+        <a href="#what-we-collect" class="sidebar-link block">What We Collect</a>
+        <a href="#what-we-dont-collect" class="sidebar-link block">What We Don't Collect</a>
+        <a href="#how-we-use" class="sidebar-link block">How We Use Your Data</a>
+        <a href="#storage-security" class="sidebar-link block">Storage & Security</a>
+        <a href="#data-retention" class="sidebar-link block">Data Retention</a>
+        <a href="#third-parties" class="sidebar-link block">Third-Party Services</a>
+        <a href="#your-rights" class="sidebar-link block">Your Rights</a>
+        <a href="#cookies" class="sidebar-link block">Cookies</a>
+        <a href="#children" class="sidebar-link block">Children's Privacy</a>
+        <a href="#international" class="sidebar-link block">International Transfers</a>
+        <a href="#changes" class="sidebar-link block">Changes to This Policy</a>
+        <a href="#contact" class="sidebar-link block">Contact</a>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <main class="min-w-0 flex-1">
+      <h1 class="text-3xl font-bold mb-2">Privacy Policy</h1>
+      <p class="text-sm text-slate-500 mb-10">Last updated: April 2, 2026</p>
+
+      <!-- 1. Introduction -->
+      <section id="introduction" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">1. Introduction</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          This Privacy Policy describes how ChronoGuard ("we", "us", or "our") collects, uses, and protects your personal information when you use our API, website, documentation, and related services (collectively, the "Service").
+        </p>
+        <p class="text-slate-300 leading-relaxed">
+          We are committed to protecting your privacy and handling your data responsibly. We collect only the minimum information necessary to provide and improve the Service.
+        </p>
+      </section>
+
+      <!-- 2. What We Collect -->
+      <section id="what-we-collect" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">2. Information We Collect</h2>
+
+        <h3 class="text-base font-medium text-brand-300 mt-5 mb-2">Account Information</h3>
+        <ul class="text-slate-300 leading-relaxed list-disc list-inside space-y-1">
+          <li><strong class="text-white">Email address</strong> &mdash; collected when you register for an API Key, used for account identification and service communications</li>
+          <li><strong class="text-white">API Key</strong> &mdash; generated upon registration, used for authentication and rate limiting</li>
+        </ul>
+
+        <h3 class="text-base font-medium text-brand-300 mt-5 mb-2">Usage Data</h3>
+        <ul class="text-slate-300 leading-relaxed list-disc list-inside space-y-1">
+          <li><strong class="text-white">API request counts</strong> &mdash; aggregate counts per key for rate limiting (e.g., 847 of 1,000 requests used this month)</li>
+          <li><strong class="text-white">Endpoint usage</strong> &mdash; which endpoints are called (validate, resolve, convert, batch) for service analytics</li>
+          <li><strong class="text-white">Timestamps</strong> &mdash; when requests are made, for rate limit reset windows</li>
+        </ul>
+
+        <h3 class="text-base font-medium text-brand-300 mt-5 mb-2">Technical Data</h3>
+        <ul class="text-slate-300 leading-relaxed list-disc list-inside space-y-1">
+          <li><strong class="text-white">IP addresses</strong> &mdash; collected via standard web server logs for security and abuse prevention</li>
+          <li><strong class="text-white">Browser and device information</strong> &mdash; user agent strings when visiting the website (standard HTTP headers)</li>
+          <li><strong class="text-white">Response times</strong> &mdash; API latency metrics for performance monitoring</li>
+        </ul>
+
+        <h3 class="text-base font-medium text-brand-300 mt-5 mb-2">Payment Information (Pro Tier)</h3>
+        <p class="text-slate-300 leading-relaxed">
+          Payment for Pro tier subscriptions is processed by our third-party payment provider. We receive confirmation of payment status but <strong class="text-white">do not store credit card numbers, bank account details, or other sensitive payment information</strong> on our servers.
+        </p>
+      </section>
+
+      <!-- 3. What We Don't Collect -->
+      <section id="what-we-dont-collect" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">3. Information We Do NOT Collect</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">We want to be explicit about what we don't do:</p>
+        <ul class="text-slate-300 leading-relaxed space-y-2">
+          <li class="flex items-start gap-2">
+            <span class="text-green-400 mt-0.5">&#10003;</span>
+            <span><strong class="text-white">API request payloads are not stored.</strong> The datetime values, timezone identifiers, and other content you send to the API are processed in memory and discarded after the response is returned. We do not log, store, or retain your input data.</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-green-400 mt-0.5">&#10003;</span>
+            <span><strong class="text-white">We do not sell your data.</strong> Your personal information is never sold, rented, or shared with third parties for marketing or advertising purposes.</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-green-400 mt-0.5">&#10003;</span>
+            <span><strong class="text-white">We do not build user profiles.</strong> We do not track your behavior across websites or build advertising profiles based on your API usage.</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- 4. How We Use Your Data -->
+      <section id="how-we-use" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">4. How We Use Your Information</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">We use the information we collect to:</p>
+        <ul class="text-slate-300 leading-relaxed list-disc list-inside space-y-1">
+          <li><strong class="text-white">Provide the Service</strong> &mdash; authenticate requests, enforce rate limits, and deliver API responses</li>
+          <li><strong class="text-white">Maintain reliability</strong> &mdash; monitor uptime, detect errors, and diagnose performance issues</li>
+          <li><strong class="text-white">Prevent abuse</strong> &mdash; identify and block malicious traffic, DDoS attempts, and Terms of Service violations</li>
+          <li><strong class="text-white">Communicate with you</strong> &mdash; send service-critical notifications such as downtime alerts, security advisories, and breaking API changes (we do not send marketing emails)</li>
+          <li><strong class="text-white">Improve the Service</strong> &mdash; analyze aggregate, anonymized usage patterns to guide feature development and infrastructure decisions</li>
+        </ul>
+      </section>
+
+      <!-- 5. Storage & Security -->
+      <section id="storage-security" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">5. Data Storage & Security</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">We take the security of your data seriously:</p>
+        <ul class="text-slate-300 leading-relaxed list-disc list-inside space-y-1">
+          <li><strong class="text-white">Infrastructure:</strong> Our Service is hosted on Railway, a cloud platform with enterprise-grade security controls. Data is stored in PostgreSQL databases with encrypted connections.</li>
+          <li><strong class="text-white">Encryption in transit:</strong> All communication with the API and website is encrypted via HTTPS/TLS. Unencrypted HTTP requests are rejected.</li>
+          <li><strong class="text-white">API Key security:</strong> API Keys are stored using industry-standard practices. We recommend you treat your API Key as a secret and never expose it in client-side code.</li>
+          <li><strong class="text-white">Access controls:</strong> Access to production systems and data is limited to authorized personnel and protected by multi-factor authentication.</li>
+        </ul>
+        <p class="text-slate-300 leading-relaxed mt-3">
+          While we implement commercially reasonable security measures, no method of transmission or storage is 100% secure. We cannot guarantee absolute security of your data.
+        </p>
+      </section>
+
+      <!-- 6. Data Retention -->
+      <section id="data-retention" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">6. Data Retention</h2>
+        <div class="overflow-x-auto mb-4">
+          <table class="w-full text-sm text-left">
+            <thead class="text-slate-400 border-b border-slate-700">
+              <tr>
+                <th class="py-2 pr-6">Data Type</th>
+                <th class="py-2">Retention Period</th>
+              </tr>
+            </thead>
+            <tbody class="text-slate-300">
+              <tr class="border-b border-slate-800">
+                <td class="py-2 pr-6">Account data (email, API Key)</td>
+                <td class="py-2">While account is active + 30 days after deletion request</td>
+              </tr>
+              <tr class="border-b border-slate-800">
+                <td class="py-2 pr-6">Usage logs (request counts, timestamps)</td>
+                <td class="py-2">90 days</td>
+              </tr>
+              <tr class="border-b border-slate-800">
+                <td class="py-2 pr-6">Server logs (IP, user agent)</td>
+                <td class="py-2">30 days</td>
+              </tr>
+              <tr>
+                <td class="py-2 pr-6">API request payloads</td>
+                <td class="py-2">Not retained (processed transiently)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-slate-300 leading-relaxed">
+          When you request account deletion, we will remove your personal data within 30 days, except where we are legally required to retain it. Anonymized, aggregate data may be retained indefinitely for analytics purposes.
+        </p>
+      </section>
+
+      <!-- 7. Third-Party Services -->
+      <section id="third-parties" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">7. Third-Party Services</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">We use the following third-party services to operate the Service:</p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-left">
+            <thead class="text-slate-400 border-b border-slate-700">
+              <tr>
+                <th class="py-2 pr-6">Provider</th>
+                <th class="py-2 pr-6">Purpose</th>
+                <th class="py-2">Data Shared</th>
+              </tr>
+            </thead>
+            <tbody class="text-slate-300">
+              <tr class="border-b border-slate-800">
+                <td class="py-2 pr-6">Railway</td>
+                <td class="py-2 pr-6">Cloud hosting & infrastructure</td>
+                <td class="py-2">Application data, server logs</td>
+              </tr>
+              <tr class="border-b border-slate-800">
+                <td class="py-2 pr-6">PostgreSQL (via Railway)</td>
+                <td class="py-2 pr-6">Database storage</td>
+                <td class="py-2">Account data, usage metrics</td>
+              </tr>
+              <tr class="border-b border-slate-800">
+                <td class="py-2 pr-6">Redis (via Railway)</td>
+                <td class="py-2 pr-6">Caching & rate limiting</td>
+                <td class="py-2">Temporary session data</td>
+              </tr>
+              <tr class="border-b border-slate-800">
+                <td class="py-2 pr-6">GitHub</td>
+                <td class="py-2 pr-6">Source code hosting, CI/CD</td>
+                <td class="py-2">No user data</td>
+              </tr>
+              <tr>
+                <td class="py-2 pr-6">Payment processor</td>
+                <td class="py-2 pr-6">Pro tier billing</td>
+                <td class="py-2">Email, payment details</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-slate-300 leading-relaxed mt-3">
+          Each third-party provider operates under their own privacy policy. We select providers with strong security and privacy practices.
+        </p>
+      </section>
+
+      <!-- 8. Your Rights -->
+      <section id="your-rights" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">8. Your Rights</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          Depending on your location, you may have the following rights regarding your personal data:
+        </p>
+        <ul class="text-slate-300 leading-relaxed list-disc list-inside space-y-1">
+          <li><strong class="text-white">Access</strong> &mdash; request a copy of the personal data we hold about you</li>
+          <li><strong class="text-white">Correction</strong> &mdash; request correction of inaccurate or incomplete data</li>
+          <li><strong class="text-white">Deletion</strong> &mdash; request deletion of your personal data and account</li>
+          <li><strong class="text-white">Export</strong> &mdash; receive your data in a portable, machine-readable format</li>
+          <li><strong class="text-white">Objection</strong> &mdash; object to certain types of data processing</li>
+          <li><strong class="text-white">Restriction</strong> &mdash; request that we limit processing of your data in certain circumstances</li>
+        </ul>
+        <p class="text-slate-300 leading-relaxed mt-3">
+          To exercise any of these rights, contact us at <a href="mailto:support@chronoguard.com" class="text-brand-400 hover:text-brand-300 underline">support@chronoguard.com</a>. We will respond to your request within 30 days.
+        </p>
+        <p class="text-slate-400 text-sm mt-3 italic">
+          We are actively working toward full GDPR and CCPA compliance. If you have specific data protection requirements, please reach out and we will work with you to address them.
+        </p>
+      </section>
+
+      <!-- 9. Cookies -->
+      <section id="cookies" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">9. Cookies</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          <strong class="text-white">The API itself does not use cookies.</strong> API requests are authenticated via your API Key in the request header.
+        </p>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          Our website uses minimal cookies strictly necessary for functionality (such as remembering UI preferences). We do not use:
+        </p>
+        <ul class="text-slate-300 leading-relaxed list-disc list-inside space-y-1">
+          <li>Third-party advertising or tracking cookies</li>
+          <li>Social media tracking pixels</li>
+          <li>Cross-site analytics cookies</li>
+        </ul>
+      </section>
+
+      <!-- 10. Children's Privacy -->
+      <section id="children" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">10. Children's Privacy</h2>
+        <p class="text-slate-300 leading-relaxed">
+          The Service is not directed at children under the age of 13 (or the applicable age of consent in your jurisdiction). We do not knowingly collect personal information from children. If you believe we have inadvertently collected information from a child, please contact us immediately and we will take steps to delete it.
+        </p>
+      </section>
+
+      <!-- 11. International Data Transfers -->
+      <section id="international" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">11. International Data Transfers</h2>
+        <p class="text-slate-300 leading-relaxed">
+          Your data may be processed and stored in the United States, where our primary infrastructure is hosted. If you are accessing the Service from outside the United States, please be aware that your data may be transferred to, stored in, and processed in a jurisdiction with different data protection laws than your own. By using the Service, you consent to such transfers.
+        </p>
+      </section>
+
+      <!-- 12. Changes -->
+      <section id="changes" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">12. Changes to This Policy</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          We may update this Privacy Policy from time to time. The most current version will always be available at this URL with a revised "Last updated" date.
+        </p>
+        <p class="text-slate-300 leading-relaxed">
+          If we make material changes that affect how we handle your personal data, we will notify you by email at least 14 days before the changes take effect. Your continued use of the Service after the updated policy takes effect constitutes your acceptance of the changes.
+        </p>
+      </section>
+
+      <!-- 13. Contact -->
+      <section id="contact" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">13. Contact</h2>
+        <p class="text-slate-300 leading-relaxed">
+          If you have any questions or concerns about this Privacy Policy or our data practices, please contact us at
+          <a href="mailto:support@chronoguard.com" class="text-brand-400 hover:text-brand-300 underline">support@chronoguard.com</a>.
+        </p>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="border-t border-slate-800/50 py-8">
+    <div class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
+      <span>&copy; 2026 ChronoGuard. All rights reserved.</span>
+      <div class="flex gap-6">
+        <a href="/docs" class="hover:text-slate-400 transition-colors">API Docs</a>
+        <a href="/status" class="hover:text-slate-400 transition-colors">Status</a>
+        <a href="https://github.com/Mike-Mait/ChronoGuard/blob/master/CHANGELOG.md" class="hover:text-slate-400 transition-colors">Changelog</a>
+        <a href="https://github.com/Mike-Mait/ChronoGuard" class="hover:text-slate-400 transition-colors">GitHub</a>
+        <a href="/terms" class="hover:text-slate-400 transition-colors">Terms</a>
+        <a href="/privacy" class="hover:text-slate-400 transition-colors">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

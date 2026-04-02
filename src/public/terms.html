@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service &mdash; ChronoGuard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50:'#eef6ff', 100:'#d9eaff', 200:'#bcdaff', 300:'#8ec2ff', 400:'#59a0ff', 500:'#3378ff', 600:'#1b57f5', 700:'#1543e1', 800:'#1837b6', 900:'#1a328f', 950:'#141f57' },
+          },
+          fontFamily: { mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'] },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .sidebar-link { transition: color .15s; }
+    .sidebar-link:hover, .sidebar-link.active { color: #59a0ff; }
+  </style>
+</head>
+<body class="bg-brand-950 text-white antialiased">
+
+  <!-- ─── TOP BAR ─── -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-brand-950/90 backdrop-blur-md border-b border-slate-800/60">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+          <path d="M32 4L8 16v16c0 14.4 10.24 27.84 24 32 13.76-4.16 24-17.6 24-32V16L32 4z" fill="url(#shield-grad)" stroke="url(#shield-stroke)" stroke-width="2"/>
+          <circle cx="32" cy="32" r="13" fill="#0f172a" stroke="#8ec2ff" stroke-width="1.5" opacity=".9"/>
+          <line x1="32" y1="21" x2="32" y2="23" stroke="#8ec2ff" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="32" y1="41" x2="32" y2="43" stroke="#8ec2ff" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="21" y1="32" x2="23" y2="32" stroke="#8ec2ff" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="41" y1="32" x2="43" y2="32" stroke="#8ec2ff" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="32" y1="32" x2="32" y2="25" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <line x1="32" y1="32" x2="38" y2="28" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="32" cy="32" r="1.5" fill="white"/>
+          <defs>
+            <linearGradient id="shield-grad" x1="8" y1="4" x2="56" y2="64" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3378ff" stop-opacity=".15"/><stop offset="1" stop-color="#8ec2ff" stop-opacity=".05"/>
+            </linearGradient>
+            <linearGradient id="shield-stroke" x1="8" y1="4" x2="56" y2="64" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3378ff"/><stop offset="1" stop-color="#8ec2ff"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <a href="/" class="text-lg font-bold tracking-tight text-white">Chrono<span class="text-brand-400">Guard</span></a>
+      </div>
+      <nav class="flex items-center gap-6 text-sm text-slate-400">
+        <a href="/docs" class="hover:text-white transition-colors">Docs</a>
+        <a href="/docs/playground" class="hover:text-white transition-colors">Playground</a>
+        <a href="/status" class="hover:text-white transition-colors">Status</a>
+        <a href="https://github.com/Mike-Mait/ChronoGuard" class="hover:text-white transition-colors">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ─── MAIN CONTENT ─── -->
+  <div class="pt-24 pb-16 max-w-5xl mx-auto px-6 flex gap-12">
+
+    <!-- Sidebar -->
+    <aside class="hidden lg:block w-56 shrink-0">
+      <nav class="sticky top-28 space-y-2 text-sm text-slate-500">
+        <a href="#introduction" class="sidebar-link block">Introduction</a>
+        <a href="#definitions" class="sidebar-link block">Definitions</a>
+        <a href="#account-api-keys" class="sidebar-link block">Account & API Keys</a>
+        <a href="#permitted-use" class="sidebar-link block">Permitted Use</a>
+        <a href="#restrictions" class="sidebar-link block">Restrictions</a>
+        <a href="#rate-limits" class="sidebar-link block">Rate Limits & Fair Use</a>
+        <a href="#availability" class="sidebar-link block">Service Availability</a>
+        <a href="#data-handling" class="sidebar-link block">Data Handling</a>
+        <a href="#intellectual-property" class="sidebar-link block">Intellectual Property</a>
+        <a href="#liability" class="sidebar-link block">Limitation of Liability</a>
+        <a href="#indemnification" class="sidebar-link block">Indemnification</a>
+        <a href="#termination" class="sidebar-link block">Termination</a>
+        <a href="#modifications" class="sidebar-link block">Modifications</a>
+        <a href="#governing-law" class="sidebar-link block">Governing Law</a>
+        <a href="#contact" class="sidebar-link block">Contact</a>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <main class="min-w-0 flex-1">
+      <h1 class="text-3xl font-bold mb-2">Terms of Service</h1>
+      <p class="text-sm text-slate-500 mb-10">Last updated: April 2, 2026</p>
+
+      <!-- 1. Introduction -->
+      <section id="introduction" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">1. Introduction</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          These Terms of Service ("Terms") govern your access to and use of the ChronoGuard API, website, documentation, and related services (collectively, the "Service") operated by ChronoGuard ("we", "us", or "our").
+        </p>
+        <p class="text-slate-300 leading-relaxed">
+          By accessing or using the Service, you agree to be bound by these Terms. If you do not agree to these Terms, you may not access or use the Service. If you are using the Service on behalf of an organization, you represent that you have the authority to bind that organization to these Terms.
+        </p>
+      </section>
+
+      <!-- 2. Definitions -->
+      <section id="definitions" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">2. Definitions</h2>
+        <ul class="text-slate-300 leading-relaxed space-y-2">
+          <li><strong class="text-white">"Service"</strong> means the ChronoGuard API, website, documentation, playground, SDKs, and all related tools and infrastructure.</li>
+          <li><strong class="text-white">"API"</strong> means the ChronoGuard application programming interface, including all endpoints (validate, resolve, convert, batch) and associated functionality.</li>
+          <li><strong class="text-white">"User"</strong> or <strong class="text-white">"you"</strong> means any individual or entity that accesses or uses the Service.</li>
+          <li><strong class="text-white">"API Key"</strong> means the unique authentication credential issued to you to access the API.</li>
+          <li><strong class="text-white">"Content"</strong> means any data, datetime values, timezone identifiers, or other information you submit to the API for processing.</li>
+        </ul>
+      </section>
+
+      <!-- 3. Account & API Keys -->
+      <section id="account-api-keys" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">3. Account & API Keys</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          To use the API, you must register with a valid email address and obtain an API Key. You are responsible for:
+        </p>
+        <ul class="text-slate-300 leading-relaxed list-disc list-inside space-y-1 mb-3">
+          <li>Safeguarding your API Key and treating it as confidential</li>
+          <li>All activity that occurs under your API Key</li>
+          <li>Notifying us immediately if you suspect unauthorized use of your key</li>
+        </ul>
+        <p class="text-slate-300 leading-relaxed">
+          Free tier accounts are limited to one API Key per email address. You must not share, publish, or embed API Keys in client-side code, public repositories, or any location accessible to unauthorized parties. We reserve the right to revoke keys that are found to be compromised or shared.
+        </p>
+      </section>
+
+      <!-- 4. Permitted Use -->
+      <section id="permitted-use" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">4. Permitted Use</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          You may use the API to:
+        </p>
+        <ul class="text-slate-300 leading-relaxed list-disc list-inside space-y-1">
+          <li>Validate datetime values against specific timezones and DST rules</li>
+          <li>Resolve ambiguous or invalid datetimes caused by DST transitions</li>
+          <li>Convert datetimes between timezones with full DST awareness</li>
+          <li>Process batch operations combining the above functionalities</li>
+          <li>Integrate any of the above capabilities into your own applications, products, and services</li>
+        </ul>
+      </section>
+
+      <!-- 5. Restrictions -->
+      <section id="restrictions" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">5. Restrictions</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          You agree not to:
+        </p>
+        <ul class="text-slate-300 leading-relaxed list-disc list-inside space-y-1">
+          <li>Reverse engineer, decompile, or attempt to extract the source code of the API</li>
+          <li>Send excessive requests or intentionally generate load designed to degrade the Service for other users</li>
+          <li>Use the Service for any unlawful purpose or in violation of any applicable laws or regulations</li>
+          <li>Resell, sublicense, or redistribute API access to third parties without our prior written consent</li>
+          <li>Circumvent, disable, or interfere with rate limits, authentication, or other security features</li>
+          <li>Use automated means to create multiple accounts to evade rate limits or other restrictions</li>
+          <li>Misrepresent your identity or affiliation when registering for the Service</li>
+        </ul>
+      </section>
+
+      <!-- 6. Rate Limits & Fair Use -->
+      <section id="rate-limits" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">6. Rate Limits & Fair Use</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          The API enforces rate limits based on your subscription tier:
+        </p>
+        <div class="overflow-x-auto mb-4">
+          <table class="w-full text-sm text-left">
+            <thead class="text-slate-400 border-b border-slate-700">
+              <tr>
+                <th class="py-2 pr-6">Tier</th>
+                <th class="py-2 pr-6">Monthly Requests</th>
+                <th class="py-2">Overage Behavior</th>
+              </tr>
+            </thead>
+            <tbody class="text-slate-300">
+              <tr class="border-b border-slate-800">
+                <td class="py-2 pr-6">Free</td>
+                <td class="py-2 pr-6">1,000</td>
+                <td class="py-2">HTTP 429 response</td>
+              </tr>
+              <tr class="border-b border-slate-800">
+                <td class="py-2 pr-6">Pro</td>
+                <td class="py-2 pr-6">100,000</td>
+                <td class="py-2">HTTP 429 response</td>
+              </tr>
+              <tr>
+                <td class="py-2 pr-6">Enterprise</td>
+                <td class="py-2 pr-6">Custom</td>
+                <td class="py-2">Per contract</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-slate-300 leading-relaxed">
+          When you exceed your rate limit, the API returns an HTTP 429 (Too Many Requests) response. You must not attempt to circumvent rate limits through multiple accounts, key rotation, or other means. We reserve the right to throttle or suspend access for users exhibiting abusive traffic patterns.
+        </p>
+      </section>
+
+      <!-- 7. Service Availability -->
+      <section id="availability" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">7. Service Availability</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          The Service is provided on an <strong class="text-white">"as is"</strong> and <strong class="text-white">"as available"</strong> basis. While we strive to maintain high availability, we do not guarantee uninterrupted or error-free operation.
+        </p>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          We may occasionally perform scheduled maintenance that temporarily affects availability. Where possible, we will provide advance notice through our status page or via email.
+        </p>
+        <p class="text-slate-300 leading-relaxed">
+          Enterprise tier customers may negotiate specific Service Level Agreements (SLAs) with guaranteed uptime commitments as part of their contract.
+        </p>
+      </section>
+
+      <!-- 8. Data Handling -->
+      <section id="data-handling" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">8. Data Handling</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          Your use of the Service is also governed by our <a href="/privacy" class="text-brand-400 hover:text-brand-300 underline">Privacy Policy</a>, which describes how we collect, use, and protect your information.
+        </p>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          <strong class="text-white">Transient processing:</strong> Datetime values, timezone identifiers, and other content you submit to the API are processed in real time and are <em>not</em> stored, logged, or retained after the response is returned.
+        </p>
+        <p class="text-slate-300 leading-relaxed">
+          <strong class="text-white">Account data:</strong> We store your email address and API Key for account management, authentication, and rate limiting purposes. Payment information for Pro tier subscriptions is processed by our third-party payment provider and is never stored on our servers.
+        </p>
+      </section>
+
+      <!-- 9. Intellectual Property -->
+      <section id="intellectual-property" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">9. Intellectual Property</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          The Service, including the API, documentation, website design, SDKs, and all related intellectual property, is owned by ChronoGuard and is protected by applicable intellectual property laws.
+        </p>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          We grant you a limited, non-exclusive, non-transferable, revocable license to use the API in accordance with these Terms.
+        </p>
+        <p class="text-slate-300 leading-relaxed">
+          You retain all rights to your own applications, products, and services that integrate with the API. Nothing in these Terms transfers ownership of your work to us.
+        </p>
+      </section>
+
+      <!-- 10. Limitation of Liability -->
+      <section id="liability" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">10. Limitation of Liability</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          To the maximum extent permitted by applicable law, ChronoGuard shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, business opportunities, or goodwill, arising out of or related to your use of the Service.
+        </p>
+        <p class="text-slate-300 leading-relaxed">
+          Our total aggregate liability for any claims arising from or related to the Service shall not exceed the amount you paid to us in the twelve (12) months preceding the claim. If you are on the free tier, our maximum liability shall not exceed ten US dollars ($10.00).
+        </p>
+      </section>
+
+      <!-- 11. Indemnification -->
+      <section id="indemnification" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">11. Indemnification</h2>
+        <p class="text-slate-300 leading-relaxed">
+          You agree to indemnify, defend, and hold harmless ChronoGuard, its officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable legal fees) arising out of or related to your use of the Service, your violation of these Terms, or your violation of any rights of a third party.
+        </p>
+      </section>
+
+      <!-- 12. Termination -->
+      <section id="termination" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">12. Termination</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          You may stop using the Service at any time. You may request deletion of your account and associated data by contacting us.
+        </p>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          We may suspend or terminate your access to the Service at any time, with or without notice, if we reasonably believe you have violated these Terms or if continued access poses a security risk to the Service or other users.
+        </p>
+        <p class="text-slate-300 leading-relaxed">
+          Upon termination, your API Key will be deactivated and your right to access the Service will cease immediately. Provisions that by their nature should survive termination (including Limitation of Liability, Indemnification, and Governing Law) shall survive.
+        </p>
+      </section>
+
+      <!-- 13. Modifications -->
+      <section id="modifications" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">13. Modifications to These Terms</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          We may revise these Terms from time to time. The most current version will always be available at this URL. If we make material changes, we will notify you by email (sent to the address associated with your API Key) at least 14 days before the changes take effect.
+        </p>
+        <p class="text-slate-300 leading-relaxed">
+          Your continued use of the Service after revised Terms take effect constitutes your acceptance of the changes. If you do not agree to the revised Terms, you must stop using the Service.
+        </p>
+      </section>
+
+      <!-- 14. Governing Law -->
+      <section id="governing-law" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">14. Governing Law</h2>
+        <p class="text-slate-300 leading-relaxed">
+          These Terms shall be governed by and construed in accordance with the laws of the United States, without regard to conflict of law principles. Any disputes arising from or relating to these Terms or the Service shall be resolved in the courts of competent jurisdiction. Both parties agree to submit to the personal jurisdiction of such courts.
+        </p>
+      </section>
+
+      <!-- 15. Contact -->
+      <section id="contact" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">15. Contact</h2>
+        <p class="text-slate-300 leading-relaxed">
+          If you have any questions about these Terms, please contact us at
+          <a href="mailto:support@chronoguard.com" class="text-brand-400 hover:text-brand-300 underline">support@chronoguard.com</a>.
+        </p>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="border-t border-slate-800/50 py-8">
+    <div class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
+      <span>&copy; 2026 ChronoGuard. All rights reserved.</span>
+      <div class="flex gap-6">
+        <a href="/docs" class="hover:text-slate-400 transition-colors">API Docs</a>
+        <a href="/status" class="hover:text-slate-400 transition-colors">Status</a>
+        <a href="https://github.com/Mike-Mait/ChronoGuard/blob/master/CHANGELOG.md" class="hover:text-slate-400 transition-colors">Changelog</a>
+        <a href="https://github.com/Mike-Mait/ChronoGuard" class="hover:text-slate-400 transition-colors">GitHub</a>
+        <a href="/terms" class="hover:text-slate-400 transition-colors">Terms</a>
+        <a href="/privacy" class="hover:text-slate-400 transition-colors">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
