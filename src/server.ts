@@ -74,8 +74,8 @@ app.addHook("onRequest", async (request, reply) => {
 
 // API version + rate-limit headers
 app.addHook("onSend", async (request, reply) => {
-  reply.header("X-API-Version", "1.0.0");
-  reply.header("X-Powered-By", "ChronoGuard");
+  reply.header("X-API-Version", "1.1.0");
+  reply.header("X-Powered-By", "ChronoShield API");
 });
 
 // Request logging hook
@@ -110,7 +110,7 @@ async function start() {
     openapi: {
       openapi: "3.1.0",
       info: {
-        title: "ChronoGuard API",
+        title: "ChronoShield API",
         description: "DST-aware datetime validation, resolution, and conversion API.\n\n**Need an API key?** [Get one free on the homepage](/) — no credit card required. Then click **Authorize** above and paste your key.",
         version: "1.1.0",
       },
@@ -178,7 +178,7 @@ async function start() {
       },
       documentation: "/docs",
       playground: "/docs/playground",
-      changelog: "https://github.com/Mike-Mait/ChronoGuard/blob/master/CHANGELOG.md",
+      changelog: "https://github.com/Mike-Mait/ChronoShield-API/blob/master/CHANGELOG.md",
     };
   });
 
@@ -230,7 +230,7 @@ async function start() {
   }
 
   await app.listen({ port: config.port, host: config.host });
-  console.log(`ChronoGuard API running at http://localhost:${config.port}`);
+  console.log(`ChronoShield API running at http://localhost:${config.port}`);
   console.log(`API docs at http://localhost:${config.port}/docs`);
 }
 

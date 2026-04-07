@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ChronoGuard &mdash; Never ship a timezone bug again</title>
+  <title>ChronoShield API &mdash; Never ship a timezone bug again</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -64,13 +64,13 @@
             </linearGradient>
           </defs>
         </svg>
-        <span class="text-lg font-bold tracking-tight text-white">Chrono<span class="text-brand-400">Guard</span></span>
+        <span class="text-lg font-bold tracking-tight text-white">Chrono<span class="text-brand-400">Shield</span> <span class="text-brand-300 text-sm font-semibold">API</span></span>
       </div>
       <div class="flex items-center gap-5 text-xs font-medium">
         <a href="/docs" class="text-slate-500 hover:text-slate-300 transition-colors">Docs</a>
         <a href="/docs/playground" class="text-slate-500 hover:text-slate-300 transition-colors">Playground</a>
         <a href="/status" class="text-slate-500 hover:text-slate-300 transition-colors">Status</a>
-        <a href="https://github.com/Mike-Mait/ChronoGuard" class="text-slate-500 hover:text-slate-300 transition-colors">GitHub</a>
+        <a href="https://github.com/Mike-Mait/ChronoShield-API" class="text-slate-500 hover:text-slate-300 transition-colors">GitHub</a>
       </div>
     </div>
   </header>
@@ -130,7 +130,7 @@
 
   <!-- ─── FEATURES ─── -->
   <section class="max-w-5xl mx-auto px-6 py-10">
-    <h2 class="text-2xl font-bold text-center mb-2">ChronoGuard catches what others miss</h2>
+    <h2 class="text-2xl font-bold text-center mb-2">ChronoShield API catches what others miss</h2>
     <p class="text-slate-400 text-center mb-10 text-sm">Four endpoints. Explicit handling. Zero ambiguity.</p>
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <div class="rounded-xl border border-slate-800 bg-slate-900/50 p-6 text-center">
@@ -250,14 +250,14 @@
     <!-- TypeScript -->
     <div id="lang-panel-ts" class="lang-panel">
       <div class="rounded-lg border border-slate-800 bg-slate-900/60 px-4 py-2 mb-2">
-        <pre class="code-block text-xs text-slate-400"><code><span class="text-slate-500">$</span> npm install chronoguard</code></pre>
+        <pre class="code-block text-xs text-slate-400"><code><span class="text-slate-500">$</span> npm install chronoshield</code></pre>
       </div>
       <div class="rounded-xl border border-slate-800 bg-slate-900 overflow-hidden">
         <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
           <span class="text-[10px] font-bold tracking-wider uppercase text-brand-400">TypeScript &mdash; minimal example</span>
         </div>
-        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">import</span> { ChronoGuardClient } <span class="text-slate-500">from</span> <span class="text-emerald-300">"chronoguard"</span>;
-<span class="text-slate-500">const</span> cg = <span class="text-slate-500">new</span> ChronoGuardClient({ apiKey: <span class="text-emerald-300">"YOUR_KEY"</span> });
+        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">import</span> { ChronoShieldClient } <span class="text-slate-500">from</span> <span class="text-emerald-300">"chronoshield"</span>;
+<span class="text-slate-500">const</span> cg = <span class="text-slate-500">new</span> ChronoShieldClient({ apiKey: <span class="text-emerald-300">"YOUR_KEY"</span> });
 
 <span class="text-slate-500">const</span> result = <span class="text-slate-500">await</span> cg.validate({
   local_datetime: <span class="text-emerald-300">"2026-03-08T02:30:00"</span>,
@@ -270,14 +270,14 @@
     <!-- Python -->
     <div id="lang-panel-py" class="lang-panel hidden">
       <div class="rounded-lg border border-slate-800 bg-slate-900/60 px-4 py-2 mb-2">
-        <pre class="code-block text-xs text-slate-400"><code><span class="text-slate-500">$</span> pip install chronoguard</code></pre>
+        <pre class="code-block text-xs text-slate-400"><code><span class="text-slate-500">$</span> pip install chronoshield</code></pre>
       </div>
       <div class="rounded-xl border border-slate-800 bg-slate-900 overflow-hidden">
         <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
           <span class="text-[10px] font-bold tracking-wider uppercase text-brand-400">Python &mdash; minimal example</span>
         </div>
-        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">from</span> chronoguard <span class="text-slate-500">import</span> ChronoGuardClient
-cg = ChronoGuardClient(<span class="text-emerald-300">"YOUR_KEY"</span>)
+        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">from</span> chronoshield <span class="text-slate-500">import</span> ChronoShieldClient
+cg = ChronoShieldClient(<span class="text-emerald-300">"YOUR_KEY"</span>)
 
 result = cg.validate(
     local_datetime=<span class="text-emerald-300">"2026-03-08T02:30:00"</span>,
@@ -293,7 +293,7 @@ result = cg.validate(
         <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
           <span class="text-[10px] font-bold tracking-wider uppercase text-brand-400">cURL &mdash; one request</span>
         </div>
-        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://chronoguard-api-production.up.railway.app/v1/datetime/validate \
+        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://chronoshieldapi.com/v1/datetime/validate \
   -H <span class="text-amber-300">"Content-Type: application/json"</span> \
   -H <span class="text-amber-300">"x-api-key: YOUR_KEY"</span> \
   -d <span class="text-emerald-300">'{ "local_datetime": "2026-03-08T02:30:00", "time_zone": "America/New_York" }'</span>
@@ -338,7 +338,7 @@ result = cg.validate(
         <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
           <span class="text-[10px] font-bold tracking-wider uppercase text-emerald-400">Request</span>
         </div>
-        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://chronoguard-api-production.up.railway.app/v1/datetime/validate \
+        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://chronoshieldapi.com/v1/datetime/validate \
   -H <span class="text-amber-300">"x-api-key: YOUR_KEY"</span> \
   -d <span class="text-emerald-300">'{
     "local_datetime": "2026-03-08T02:30:00",
@@ -367,7 +367,7 @@ result = cg.validate(
         <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
           <span class="text-[10px] font-bold tracking-wider uppercase text-emerald-400">Request</span>
         </div>
-        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://chronoguard-api-production.up.railway.app/v1/datetime/resolve \
+        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://chronoshieldapi.com/v1/datetime/resolve \
   -H <span class="text-amber-300">"x-api-key: YOUR_KEY"</span> \
   -d <span class="text-emerald-300">'{
     "local_datetime": "2026-11-01T01:30:00",
@@ -393,7 +393,7 @@ result = cg.validate(
         <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
           <span class="text-[10px] font-bold tracking-wider uppercase text-emerald-400">Request</span>
         </div>
-        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://chronoguard-api-production.up.railway.app/v1/datetime/convert \
+        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://chronoshieldapi.com/v1/datetime/convert \
   -H <span class="text-amber-300">"x-api-key: YOUR_KEY"</span> \
   -d <span class="text-emerald-300">'{
     "instant_utc": "2026-06-15T15:00:00Z",
@@ -419,7 +419,7 @@ result = cg.validate(
         <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
           <span class="text-[10px] font-bold tracking-wider uppercase text-emerald-400">Request</span>
         </div>
-        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://chronoguard-api-production.up.railway.app/v1/datetime/batch \
+        <pre class="code-block text-sm p-4 overflow-x-auto text-slate-300 leading-relaxed"><code><span class="text-slate-500">$</span> curl -X POST https://chronoshieldapi.com/v1/datetime/batch \
   -H <span class="text-amber-300">"x-api-key: YOUR_KEY"</span> \
   -d <span class="text-emerald-300">'{
     "items": [
@@ -451,7 +451,7 @@ result = cg.validate(
   <!-- ─── PRODUCTION INFRASTRUCTURE ─── -->
   <section class="max-w-4xl mx-auto px-6 py-16">
     <h2 class="text-2xl font-bold text-center mb-2">Production infrastructure, not a wrapper</h2>
-    <p class="text-slate-400 text-center mb-10 text-sm max-w-2xl mx-auto">ChronoGuard isn't a thin layer over a timezone library. It's correctness infrastructure with the operational maturity to match.</p>
+    <p class="text-slate-400 text-center mb-10 text-sm max-w-2xl mx-auto">ChronoShield API isn't a thin layer over a timezone library. It's correctness infrastructure with the operational maturity to match.</p>
     <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
       <div class="rounded-lg border border-slate-800 bg-slate-900/30 p-4 text-center">
         <div class="text-2xl font-extrabold text-white">All</div>
@@ -471,7 +471,7 @@ result = cg.validate(
       <div class="rounded-lg border border-slate-800 bg-slate-900/30 p-4 text-center">
         <div class="text-2xl font-extrabold text-white">v1.1</div>
         <div class="text-xs text-slate-500 mt-1">versioned API</div>
-        <div class="text-[10px] text-slate-600 mt-0.5">X-API-Version header on every response. <a href="https://github.com/Mike-Mait/ChronoGuard/blob/master/CHANGELOG.md" class="text-brand-400 hover:underline">Changelog</a></div>
+        <div class="text-[10px] text-slate-600 mt-0.5">X-API-Version header on every response. <a href="https://github.com/Mike-Mait/ChronoShield-API/blob/master/CHANGELOG.md" class="text-brand-400 hover:underline">Changelog</a></div>
       </div>
       <div class="rounded-lg border border-slate-800 bg-slate-900/30 p-4 text-center">
         <div class="text-2xl font-extrabold text-white flex items-center justify-center gap-1">
@@ -509,7 +509,7 @@ result = cg.validate(
   <section id="pricing" class="max-w-5xl mx-auto px-6 py-20">
     <h2 class="text-2xl font-bold text-center mb-2">Simple, transparent pricing</h2>
     <p class="text-slate-400 text-center mb-4 text-sm">Start free. Upgrade when you need to. Scale with annual enterprise plans.</p>
-    <p class="text-center mb-12 text-xs text-slate-600">One DST incident costs more than a year of Pro. Most timezone bugs cost hours of debugging &mdash; ChronoGuard prevents them for pennies per request.</p>
+    <p class="text-center mb-12 text-xs text-slate-600">One DST incident costs more than a year of Pro. Most timezone bugs cost hours of debugging &mdash; ChronoShield API prevents them for pennies per request.</p>
 
     <!-- Self-serve tiers -->
     <div class="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
@@ -591,7 +591,7 @@ result = cg.validate(
             <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Invoice billing &amp; annual contract</li>
             <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Priority email support (48h SLA)</li>
           </ul>
-          <a href="mailto:mikemaittech@gmail.com?subject=ChronoGuard%20Enterprise%20Starter" class="mt-6 w-full py-3 rounded-lg border border-slate-700 hover:border-slate-500 text-white font-semibold text-sm transition-colors cursor-pointer text-center block">
+          <a href="mailto:mikemaittech@gmail.com?subject=ChronoShield%20API%20Enterprise%20Starter" class="mt-6 w-full py-3 rounded-lg border border-slate-700 hover:border-slate-500 text-white font-semibold text-sm transition-colors cursor-pointer text-center block">
             Contact Sales
           </a>
         </div>
@@ -612,7 +612,7 @@ result = cg.validate(
             <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Named support contact (24h SLA)</li>
             <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Security questionnaire &amp; usage reporting</li>
           </ul>
-          <a href="mailto:mikemaittech@gmail.com?subject=ChronoGuard%20Enterprise%20Growth" class="mt-6 w-full py-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-semibold text-sm transition-colors shadow-lg shadow-amber-500/25 cursor-pointer text-center block">
+          <a href="mailto:mikemaittech@gmail.com?subject=ChronoShield%20API%20Enterprise%20Growth" class="mt-6 w-full py-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-semibold text-sm transition-colors shadow-lg shadow-amber-500/25 cursor-pointer text-center block">
             Contact Sales
           </a>
         </div>
@@ -631,7 +631,7 @@ result = cg.validate(
             <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Procurement &amp; legal support</li>
             <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Private Slack channel &amp; onboarding</li>
           </ul>
-          <a href="mailto:mikemaittech@gmail.com?subject=ChronoGuard%20Enterprise%20Strategic" class="mt-6 w-full py-3 rounded-lg border border-slate-700 hover:border-slate-500 text-white font-semibold text-sm transition-colors cursor-pointer text-center block">
+          <a href="mailto:mikemaittech@gmail.com?subject=ChronoShield%20API%20Enterprise%20Strategic" class="mt-6 w-full py-3 rounded-lg border border-slate-700 hover:border-slate-500 text-white font-semibold text-sm transition-colors cursor-pointer text-center block">
             Contact Sales
           </a>
         </div>
@@ -659,7 +659,7 @@ result = cg.validate(
         <div class="text-brand-400 text-sm font-semibold mb-1 group-hover:text-brand-300">Live Status</div>
         <p class="text-xs text-slate-500 leading-relaxed">Uptime, database health, and version info &mdash; updated in real time.</p>
       </a>
-      <a href="https://github.com/Mike-Mait/ChronoGuard/blob/master/CHANGELOG.md" class="group rounded-xl border border-slate-800 bg-slate-900/30 hover:border-brand-500/40 p-5 transition-colors">
+      <a href="https://github.com/Mike-Mait/ChronoShield-API/blob/master/CHANGELOG.md" class="group rounded-xl border border-slate-800 bg-slate-900/30 hover:border-brand-500/40 p-5 transition-colors">
         <div class="text-brand-400 text-sm font-semibold mb-1 group-hover:text-brand-300">Changelog</div>
         <p class="text-xs text-slate-500 leading-relaxed">Every feature, fix, and improvement. Versioned and dated.</p>
       </a>
@@ -669,12 +669,12 @@ result = cg.validate(
   <!-- ─── FOOTER ─── -->
   <footer class="border-t border-slate-800/50 py-8">
     <div class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
-      <span>&copy; 2026 ChronoGuard. All rights reserved.</span>
+      <span>&copy; 2026 ChronoShield API. All rights reserved.</span>
       <div class="flex gap-6">
         <a href="/docs" class="hover:text-slate-400 transition-colors">API Docs</a>
         <a href="/status" class="hover:text-slate-400 transition-colors">Status</a>
-        <a href="https://github.com/Mike-Mait/ChronoGuard/blob/master/CHANGELOG.md" class="hover:text-slate-400 transition-colors">Changelog</a>
-        <a href="https://github.com/Mike-Mait/ChronoGuard" class="hover:text-slate-400 transition-colors">GitHub</a>
+        <a href="https://github.com/Mike-Mait/ChronoShield-API/blob/master/CHANGELOG.md" class="hover:text-slate-400 transition-colors">Changelog</a>
+        <a href="https://github.com/Mike-Mait/ChronoShield-API" class="hover:text-slate-400 transition-colors">GitHub</a>
         <a href="/terms" class="hover:text-slate-400 transition-colors">Terms</a>
         <a href="/privacy" class="hover:text-slate-400 transition-colors">Privacy</a>
       </div>

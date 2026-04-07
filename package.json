@@ -1,7 +1,7 @@
 {
-  "name": "chronoguard",
+  "name": "chronoshield-api",
   "version": "1.1.0",
-  "description": "ChronoGuard API - DST-aware datetime validation, resolution, and conversion",
+  "description": "ChronoShield API - DST-aware datetime validation, resolution, and conversion",
   "main": "dist/server.js",
   "scripts": {
     "build": "tsc && node -e \"require('fs').cpSync('src/public','dist/public',{recursive:true})\"",

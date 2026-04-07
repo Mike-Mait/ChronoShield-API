@@ -1,13 +1,13 @@
 openapi: "3.1.0"
 info:
-  title: ChronoGuard API
+  title: ChronoShield API
   description: |
     DST-aware datetime validation, resolution, and conversion API.
 
     **Need an API key?** [Get one free on the homepage](/) — no credit card required. Then click **Authorize** above and paste your key.
   version: "1.1.0"
 servers:
-  - url: https://chronoguard-api-production.up.railway.app
+  - url: https://chronoshieldapi.com
     description: Production
   - url: http://localhost:3000
     description: Local development

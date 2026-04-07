@@ -56,12 +56,12 @@ export interface BatchResponse {
   failed: number;
 }
 
-export class ChronoGuardClient {
+export class ChronoShieldClient {
   private baseUrl: string;
   private apiKey: string;
 
   constructor(options: { baseUrl?: string; apiKey: string }) {
-    this.baseUrl = (options.baseUrl || "https://chronoguard-api-production.up.railway.app").replace(/\/$/, "");
+    this.baseUrl = (options.baseUrl || "https://chronoshieldapi.com").replace(/\/$/, "");
     this.apiKey = options.apiKey;
   }
 
@@ -77,7 +77,7 @@ export class ChronoGuardClient {
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({ error: "Unknown error" }));
-      throw new Error(`ChronoGuard API error (${response.status}): ${(error as { error: string }).error}`);
+      throw new Error(`ChronoShield API error (${response.status}): ${(error as { error: string }).error}`);
     }
 
     return response.json() as Promise<T>;

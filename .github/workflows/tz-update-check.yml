@@ -6,6 +6,10 @@ on:
     - cron: "0 9 * * 1"
   workflow_dispatch: # Allow manual trigger
 
+permissions:
+  issues: write
+  contents: read
+
 jobs:
   check-tz-update:
     runs-on: ubuntu-latest
@@ -64,7 +68,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: existing.number,
-                body: `Weekly check: latest IANA tz version is **${latest}**, ChronoGuard is running **${current}**.\n\nTo update, upgrade the Node.js version in your Docker/Railway deployment.`,
+                body: `Weekly check: latest IANA tz version is **${latest}**, ChronoShield API is running **${current}**.\n\nTo update, upgrade the Node.js version in your Docker/Railway deployment.`,
               });
               console.log(`Updated existing issue #${existing.number}`);
             } else {

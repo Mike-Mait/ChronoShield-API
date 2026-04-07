@@ -11,7 +11,7 @@ services:
       - PORT=3000
       - HOST=0.0.0.0
       - LOG_LEVEL=info
-      - DATABASE_URL=postgresql://chronoguard:chronoguard@postgres:5432/chronoguard
+      - DATABASE_URL=postgresql://chronoshield:chronoshield@postgres:5432/chronoshield
       - REDIS_URL=redis://redis:6379
       - API_KEY=${API_KEY:-dev-api-key-change-me}
     depends_on:
@@ -24,15 +24,15 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: chronoguard
-      POSTGRES_PASSWORD: chronoguard
-      POSTGRES_DB: chronoguard
+      POSTGRES_USER: chronoshield
+      POSTGRES_PASSWORD: chronoshield
+      POSTGRES_DB: chronoshield
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U chronoguard"]
+      test: ["CMD-SHELL", "pg_isready -U chronoshield"]
       interval: 5s
       timeout: 5s
       retries: 5

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to ChronoGuard API will be documented in this file.
+All notable changes to ChronoShield API will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
@@ -19,7 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Auth hook now validates dynamically generated API keys (from the landing page) against both database and in-memory stores
 - Swagger UI moved from `/docs` to `/docs/playground`; custom docs page now served at `/docs`
 - OpenAPI spec now lists both production and local development servers
-- All public-facing URLs aligned to use the canonical `chronoguard-api-production.up.railway.app` domain
+- All public-facing URLs aligned to use the canonical `chronoshieldapi.com` domain
 
 ### Fixed
 - **Critical auth bug** — API keys generated via the landing page were not being validated; requests with generated keys returned 401

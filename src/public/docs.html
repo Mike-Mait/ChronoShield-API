@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ChronoGuard &mdash; API Documentation</title>
+  <title>ChronoShield API &mdash; Documentation</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -52,12 +52,12 @@
             <linearGradient id="ss" x1="8" y1="4" x2="56" y2="64" gradientUnits="userSpaceOnUse"><stop stop-color="#3378ff"/><stop offset="1" stop-color="#8ec2ff"/></linearGradient>
           </defs>
         </svg>
-        <span class="text-sm font-bold text-white">Chrono<span class="text-brand-400">Guard</span></span>
+        <span class="text-sm font-bold text-white">Chrono<span class="text-brand-400">Shield</span> <span class="text-brand-300 text-xs font-semibold">API</span></span>
         <span class="text-xs text-slate-600 ml-1">Docs</span>
       </a>
       <div class="flex items-center gap-5 text-xs">
         <a href="/docs/playground" class="text-slate-500 hover:text-slate-300 transition-colors">API Playground</a>
-        <a href="https://github.com/Mike-Mait/ChronoGuard" class="text-slate-500 hover:text-slate-300 transition-colors">GitHub</a>
+        <a href="https://github.com/Mike-Mait/ChronoShield-API" class="text-slate-500 hover:text-slate-300 transition-colors">GitHub</a>
       </div>
     </div>
   </header>
@@ -94,11 +94,11 @@
       <section id="overview" class="mb-16">
         <h1 class="text-3xl font-extrabold text-white tracking-tight">API Documentation</h1>
         <p class="mt-4 text-base text-slate-400 leading-relaxed max-w-2xl">
-          ChronoGuard is a REST API that validates, resolves, and converts datetimes across timezones with <strong class="text-white">explicit handling of DST ambiguity</strong>. It catches the edge cases that cause silent production bugs &mdash; invalid times that don't exist (spring-forward gaps) and ambiguous times that occur twice (fall-back overlaps).
+          ChronoShield API is a REST API that validates, resolves, and converts datetimes across timezones with <strong class="text-white">explicit handling of DST ambiguity</strong>. It catches the edge cases that cause silent production bugs &mdash; invalid times that don't exist (spring-forward gaps) and ambiguous times that occur twice (fall-back overlaps).
         </p>
         <div class="mt-6 inline-flex items-center gap-3 text-xs">
           <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-400 font-mono">Base URL</span>
-          <code class="text-brand-300">https://chronoguard-api-production.up.railway.app</code>
+          <code class="text-brand-300">https://chronoshieldapi.com</code>
         </div>
         <div class="mt-4 flex flex-wrap gap-4 text-xs text-slate-500">
           <span class="flex items-center gap-1.5"><svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>v1.1.0 &mdash; versioned, stable API</span>
@@ -110,7 +110,7 @@
         <p class="mt-4 text-xs text-slate-500">Not needed for simple UTC display formatting. Built for apps that interpret and act on user-entered local times.</p>
 
         <div class="mt-8 rounded-xl border border-slate-800 bg-slate-900/50 p-6">
-          <h3 class="text-sm font-bold text-white mb-3">When should I use ChronoGuard?</h3>
+          <h3 class="text-sm font-bold text-white mb-3">When should I use ChronoShield API?</h3>
           <p class="text-sm text-slate-400 mb-4">Use it whenever your application accepts, stores, or acts on local datetimes in any timezone. Specifically:</p>
           <div class="grid sm:grid-cols-2 gap-3 text-sm">
             <div class="flex items-start gap-2">
@@ -144,7 +144,7 @@
       <!-- REAL-WORLD SCENARIOS -->
       <section id="scenarios" class="mb-16">
         <h2 class="text-xl font-bold text-white mb-4">Real-World Scenarios</h2>
-        <p class="text-sm text-slate-400 mb-6">These are the exact situations where timezone bugs happen in production. Here's how ChronoGuard prevents each one.</p>
+        <p class="text-sm text-slate-400 mb-6">These are the exact situations where timezone bugs happen in production. Here's how ChronoShield API prevents each one.</p>
 
         <!-- Scenario 1 -->
         <div class="rounded-xl border border-slate-800 bg-slate-900/50 p-6 mb-4">
@@ -152,11 +152,11 @@
           <p class="text-xs text-slate-500 mb-4">A user in New York picks March 8, 2026 at 2:30 AM for a standup. That time will never exist &mdash; clocks jump from 2:00 AM to 3:00 AM.</p>
           <div class="grid sm:grid-cols-2 gap-3">
             <div>
-              <div class="text-[10px] font-bold uppercase tracking-wider text-red-400 mb-2">Without ChronoGuard</div>
+              <div class="text-[10px] font-bold uppercase tracking-wider text-red-400 mb-2">Without ChronoShield API</div>
               <p class="text-xs text-slate-500">Your app stores <code class="text-xs">2:30 AM</code>. The calendar event either fires at 3:30 AM (wrong) or not at all (worse). No error is raised.</p>
             </div>
             <div>
-              <div class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 mb-2">With ChronoGuard</div>
+              <div class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 mb-2">With ChronoShield API</div>
               <p class="text-xs text-slate-500">Call <code class="text-xs text-brand-300">/validate</code> &rarr; get <code class="text-xs text-red-300">status: "invalid"</code> + <code class="text-xs text-emerald-300">suggested_fixes: ["3:00 AM"]</code>. Show the user: "That time doesn't exist. Use 3:00 AM instead?"</p>
             </div>
           </div>
@@ -168,11 +168,11 @@
           <p class="text-xs text-slate-500 mb-4">A billing job runs at 1:30 AM on November 1, 2026 in New York. Clocks fall back, so 1:30 AM happens twice &mdash; once at UTC-4 and again at UTC-5.</p>
           <div class="grid sm:grid-cols-2 gap-3">
             <div>
-              <div class="text-[10px] font-bold uppercase tracking-wider text-red-400 mb-2">Without ChronoGuard</div>
+              <div class="text-[10px] font-bold uppercase tracking-wider text-red-400 mb-2">Without ChronoShield API</div>
               <p class="text-xs text-slate-500">The job runs twice (charging customers double), or the system silently picks one offset and processes at the wrong moment.</p>
             </div>
             <div>
-              <div class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 mb-2">With ChronoGuard</div>
+              <div class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 mb-2">With ChronoShield API</div>
               <p class="text-xs text-slate-500">Call <code class="text-xs text-brand-300">/resolve</code> with <code class="text-xs text-amber-300">ambiguous: "earlier"</code> &rarr; get a single deterministic UTC instant. Job runs exactly once.</p>
             </div>
           </div>
@@ -184,11 +184,11 @@
           <p class="text-xs text-slate-500 mb-4">An AI assistant is asked: "Book me a 2:30 AM departure from JFK on March 8." The agent needs to convert this to UTC for the airline API.</p>
           <div class="grid sm:grid-cols-2 gap-3">
             <div>
-              <div class="text-[10px] font-bold uppercase tracking-wider text-red-400 mb-2">Without ChronoGuard</div>
+              <div class="text-[10px] font-bold uppercase tracking-wider text-red-400 mb-2">Without ChronoShield API</div>
               <p class="text-xs text-slate-500">The agent converts naively, gets the wrong UTC time, and books a flight that departs at the wrong hour. The user misses their flight.</p>
             </div>
             <div>
-              <div class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 mb-2">With ChronoGuard</div>
+              <div class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 mb-2">With ChronoShield API</div>
               <p class="text-xs text-slate-500">Agent calls <code class="text-xs text-brand-300">validate_local_datetime</code> tool &rarr; sees <code class="text-xs text-red-300">DST_GAP</code> &rarr; tells user "That time doesn't exist, the next available time is 3:00 AM. Should I use that?"</p>
             </div>
           </div>
@@ -204,7 +204,7 @@
             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400">POST</span>
             <span class="text-xs font-mono text-slate-400">/v1/datetime/validate</span>
           </div>
-          <pre class="text-sm p-4 text-slate-300 leading-relaxed"><code>curl -X POST https://chronoguard-api-production.up.railway.app/v1/datetime/validate \
+          <pre class="text-sm p-4 text-slate-300 leading-relaxed"><code>curl -X POST https://chronoshieldapi.com/v1/datetime/validate \
   -H "Content-Type: application/json" \
   -H "x-api-key: YOUR_API_KEY" \
   -d '{
@@ -467,7 +467,7 @@
           <div class="px-4 py-2.5 border-b border-slate-800 flex items-center gap-2">
             <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Request</span>
           </div>
-          <pre class="text-sm p-4 text-slate-300 leading-relaxed"><code>curl -X POST https://chronoguard-api-production.up.railway.app/v1/datetime/batch \
+          <pre class="text-sm p-4 text-slate-300 leading-relaxed"><code>curl -X POST https://chronoshieldapi.com/v1/datetime/batch \
   -H "Content-Type: application/json" \
   -H "x-api-key: YOUR_API_KEY" \
   -d '{
@@ -604,14 +604,14 @@
       <!-- ─── SDKs ─── -->
       <section id="sdks" class="mb-16">
         <h2 class="text-xl font-bold text-white mb-2">Official SDKs</h2>
-        <p class="text-xs text-slate-500 mb-4">Maintained by the ChronoGuard team. Install via npm or pip.</p>
+        <p class="text-xs text-slate-500 mb-4">Maintained by the ChronoShield API team. Install via npm or pip.</p>
 
         <h3 class="text-sm font-semibold text-white mb-2">TypeScript / JavaScript</h3>
         <div class="rounded-xl border border-slate-800 bg-slate-900 p-4 mb-6">
-          <pre class="text-sm text-slate-300 leading-relaxed"><code>import { ChronoGuardClient } from "chronoguard";
+          <pre class="text-sm text-slate-300 leading-relaxed"><code>import { ChronoShieldClient } from "chronoshield";
 
-const client = new ChronoGuardClient({
-  baseUrl: "https://chronoguard-api-production.up.railway.app",
+const client = new ChronoShieldClient({
+  baseUrl: "https://chronoshieldapi.com",
   apiKey: "YOUR_API_KEY",
 });
 
@@ -625,10 +625,10 @@ console.log(result.status); // "invalid"</code></pre>
 
         <h3 class="text-sm font-semibold text-white mb-2">Python</h3>
         <div class="rounded-xl border border-slate-800 bg-slate-900 p-4">
-          <pre class="text-sm text-slate-300 leading-relaxed"><code>from chronoguard import ChronoGuardClient
+          <pre class="text-sm text-slate-300 leading-relaxed"><code>from chronoshield import ChronoShieldClient
 
-client = ChronoGuardClient(
-    base_url="https://chronoguard-api-production.up.railway.app",
+client = ChronoShieldClient(
+    base_url="https://chronoshieldapi.com",
     api_key="YOUR_API_KEY",
 )
 
@@ -640,7 +640,7 @@ print(result.status)  # "invalid"</code></pre>
       <!-- ─── AI AGENTS ─── -->
       <section id="ai-agents" class="mb-16">
         <h2 class="text-xl font-bold text-white mb-4">AI Agent / Tool Integration</h2>
-        <p class="text-sm text-slate-400 mb-4">ChronoGuard exposes tool schemas compatible with function-calling AI agents (OpenAI, Anthropic Claude, LangChain, CrewAI, etc.). Download the schemas from <a href="https://github.com/Mike-Mait/ChronoGuard/blob/master/agent-tools.json" class="text-brand-400 hover:underline">agent-tools.json</a>.</p>
+        <p class="text-sm text-slate-400 mb-4">ChronoShield API exposes tool schemas compatible with function-calling AI agents (OpenAI, Anthropic Claude, LangChain, CrewAI, etc.). Download the schemas from <a href="https://github.com/Mike-Mait/ChronoShield-API/blob/master/agent-tools.json" class="text-brand-400 hover:underline">agent-tools.json</a>.</p>
 
         <h3 class="text-sm font-semibold text-white mb-2">Available tools</h3>
         <div class="space-y-3 mb-6">
@@ -673,11 +673,11 @@ print(result.status)  # "invalid"</code></pre>
       <!-- FOOTER -->
       <footer class="border-t border-slate-800/50 pt-8 pb-12 mt-12">
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
-          <span>&copy; 2026 ChronoGuard</span>
+          <span>&copy; 2026 ChronoShield API</span>
           <div class="flex gap-6">
             <a href="/" class="hover:text-slate-400 transition-colors">Home</a>
             <a href="/docs/playground" class="hover:text-slate-400 transition-colors">API Playground</a>
-            <a href="https://github.com/Mike-Mait/ChronoGuard" class="hover:text-slate-400 transition-colors">GitHub</a>
+            <a href="https://github.com/Mike-Mait/ChronoShield-API" class="hover:text-slate-400 transition-colors">GitHub</a>
             <a href="/terms" class="hover:text-slate-400 transition-colors">Terms</a>
             <a href="/privacy" class="hover:text-slate-400 transition-colors">Privacy</a>
           </div>

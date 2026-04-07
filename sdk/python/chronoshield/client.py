@@ -1,4 +1,4 @@
-"""ChronoGuard Python SDK."""
+"""ChronoShield API Python SDK."""
 
 from __future__ import annotations
 
@@ -32,10 +32,10 @@ class ConvertResponse:
     time_zone: str
 
 
-class ChronoGuardClient:
-    """Client for the ChronoGuard API."""
+class ChronoShieldClient:
+    """Client for the ChronoShield API."""
 
-    DEFAULT_BASE_URL = "https://chronoguard-api-production.up.railway.app"
+    DEFAULT_BASE_URL = "https://chronoshieldapi.com"
 
     def __init__(self, api_key: str, base_url: str | None = None) -> None:
         self.base_url = (base_url or self.DEFAULT_BASE_URL).rstrip("/")
@@ -59,7 +59,7 @@ class ChronoGuardClient:
         except urllib.error.HTTPError as e:
             error_body = json.loads(e.read().decode("utf-8"))
             raise RuntimeError(
-                f"ChronoGuard API error ({e.code}): {error_body.get('error', 'Unknown error')}"
+                f"ChronoShield API error ({e.code}): {error_body.get('error', 'Unknown error')}"
             ) from e
 
     def validate(

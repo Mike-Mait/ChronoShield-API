@@ -1,17 +1,17 @@
-# ChronoGuard API
+# ChronoShield API
 
 **DST-aware datetime validation, resolution, and conversion.**
 
-ChronoGuard is a production-ready REST API that prevents timezone bugs by explicitly detecting DST gaps (spring-forward), DST overlaps (fall-back), and ambiguous local times — then resolving them deterministically using your chosen policy.
+ChronoShield API is a production-ready REST API that prevents timezone bugs by explicitly detecting DST gaps (spring-forward), DST overlaps (fall-back), and ambiguous local times — then resolving them deterministically using your chosen policy.
 
-**Base URL:** `https://chronoguard-api-production.up.railway.app`
-**Docs:** [chronoguard-api-production.up.railway.app/docs](https://chronoguard-api-production.up.railway.app/docs)
+**Base URL:** `https://chronoshieldapi.com`
+**Docs:** [chronoshieldapi.com/docs](https://chronoshieldapi.com/docs)
 
 ---
 
 ## Table of Contents
 
-- [Why ChronoGuard](#why-chronoguard)
+- [Why ChronoShield API](#why-chronoshield-api)
 - [Quick Start](#quick-start)
 - [Authentication](#authentication)
 - [API Reference](#api-reference)
@@ -31,11 +31,11 @@ ChronoGuard is a production-ready REST API that prevents timezone bugs by explic
 
 ---
 
-## Why ChronoGuard
+## Why ChronoShield API
 
-Every timezone library can convert times. ChronoGuard is different — it **catches the edge cases that cause production bugs**:
+Every timezone library can convert times. ChronoShield API is different — it **catches the edge cases that cause production bugs**:
 
-| Problem | What happens | How ChronoGuard helps |
+| Problem | What happens | How ChronoShield API helps |
 |---|---|---|
 | **DST gap** | User schedules a meeting at 2:30 AM on spring-forward day — that time doesn't exist | Returns `status: "invalid"` with `reason_code: "DST_GAP"` and suggests the next valid time |
 | **DST overlap** | User picks 1:30 AM on fall-back day — that time happens twice | Returns `status: "ambiguous"` with both possible UTC instants |
@@ -47,10 +47,10 @@ Every timezone library can convert times. ChronoGuard is different — it **catc
 
 ## Quick Start
 
-Get an API key at [chronoguard-api-production.up.railway.app](https://chronoguard-api-production.up.railway.app), then:
+Get an API key at [chronoshieldapi.com](https://chronoshieldapi.com), then:
 
 ```bash
-curl -X POST https://chronoguard-api-production.up.railway.app/v1/datetime/validate \
+curl -X POST https://chronoshieldapi.com/v1/datetime/validate \
   -H "Content-Type: application/json" \
   -H "x-api-key: YOUR_API_KEY" \
   -d '{
@@ -85,7 +85,7 @@ x-api-key: YOUR_API_KEY
 
 **Getting a key:**
 
-1. Visit the [landing page](https://chronoguard-api-production.up.railway.app) and click "Get Free API Key"
+1. Visit the [landing page](https://chronoshieldapi.com) and click "Get Free API Key"
 2. Enter your email — a key is generated instantly
 3. Keys are prefixed with `cg_live_` for easy identification
 
@@ -425,10 +425,10 @@ When you exceed your limit, requests return `429 Too Many Requests`.
 ### TypeScript / JavaScript
 
 ```typescript
-import { ChronoGuardClient } from "chronoguard";
+import { ChronoShield APIClient } from "chronoshield";
 
-const client = new ChronoGuardClient({
-  baseUrl: "https://chronoguard-api-production.up.railway.app",
+const client = new ChronoShield APIClient({
+  baseUrl: "https://chronoshieldapi.com",
   apiKey: "YOUR_API_KEY",
 });
 
@@ -458,10 +458,10 @@ console.log(converted.local_datetime); // "2026-06-15T16:00:00"
 ### Python
 
 ```python
-from chronoguard import ChronoGuardClient
+from chronoshield import ChronoShield APIClient
 
-client = ChronoGuardClient(
-    base_url="https://chronoguard-api-production.up.railway.app",
+client = ChronoShield APIClient(
+    base_url="https://chronoshieldapi.com",
     api_key="YOUR_API_KEY",
 )
 
@@ -482,7 +482,7 @@ print(converted.local_datetime)  # "2026-06-15T16:00:00"
 
 ## AI Agent / Tool Integration
 
-ChronoGuard exposes tool schemas compatible with function-calling AI agents (OpenAI, Anthropic Claude, LangChain, etc.). The tool definitions are available in [`agent-tools.json`](./agent-tools.json).
+ChronoShield API exposes tool schemas compatible with function-calling AI agents (OpenAI, Anthropic Claude, LangChain, etc.). The tool definitions are available in [`agent-tools.json`](./agent-tools.json).
 
 ### Tool: `validate_local_datetime`
 
@@ -539,7 +539,7 @@ ChronoGuard exposes tool schemas compatible with function-calling AI agents (Ope
 
 ### Example: Using with an AI Agent
 
-An AI scheduling assistant can use ChronoGuard to safely book meetings:
+An AI scheduling assistant can use ChronoShield API to safely book meetings:
 
 1. User says: "Schedule a call at 2:30 AM ET on March 8, 2026"
 2. Agent calls `validate_local_datetime` → gets `status: "invalid"`, `reason_code: "DST_GAP"`
@@ -554,8 +554,8 @@ An AI scheduling assistant can use ChronoGuard to safely book meetings:
 ### Docker Compose
 
 ```bash
-git clone https://github.com/Mike-Mait/ChronoGuard.git
-cd ChronoGuard
+git clone https://github.com/Mike-Mait/ChronoShield-API.git
+cd ChronoShield-API
 cp .env.example .env    # Edit with your values
 docker compose up
 ```
