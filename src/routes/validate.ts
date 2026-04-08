@@ -61,6 +61,8 @@ export async function validateRoute(app: FastifyInstance) {
       if (!parsed.success) {
         return (reply as any).code(400).send({
           error: "Validation failed",
+          code: "VALIDATION_FAILED",
+          message: "Request body failed schema validation.",
           details: parsed.error.issues,
         });
       }

@@ -11,7 +11,11 @@ export async function webhooksRoute(app: FastifyInstance) {
     },
     async (request, reply) => {
       if (!config.stripeSecretKey || !config.stripeWebhookSecret) {
-        return (reply as any).code(500).send({ error: "Stripe not configured" });
+        return (reply as any).code(500).send({
+          error: "Stripe not configured",
+          code: "STRIPE_NOT_CONFIGURED",
+          message: "Payment processing is not available.",
+        });
       }
 
       const stripe = require("stripe")(config.stripeSecretKey);
@@ -32,7 +36,11 @@ export async function webhooksRoute(app: FastifyInstance) {
         );
       } catch (err: any) {
         request.log.error(err, "Stripe webhook signature verification failed");
-        return (reply as any).code(400).send({ error: `Webhook Error: ${err.message}` });
+        return (reply as any).code(400).send({
+          error: "Webhook signature verification failed",
+          code: "WEBHOOK_ERROR",
+          message: err.message,
+        });
       }
 
       request.log.info({ type: event.type }, "Stripe webhook received");

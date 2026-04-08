@@ -35,6 +35,8 @@ export async function convertRoute(app: FastifyInstance) {
       if (!parsed.success) {
         return (reply as any).code(400).send({
           error: "Validation failed",
+          code: "VALIDATION_FAILED",
+          message: "Request body failed schema validation.",
           details: parsed.error.issues,
         });
       }
@@ -48,7 +50,8 @@ export async function convertRoute(app: FastifyInstance) {
         if (err instanceof AppError) {
           return reply.code(err.statusCode as any).send({
             error: err.message,
-            code: err.code,
+            code: err.code || "APP_ERROR",
+            message: err.message,
           } as any);
         }
         throw err;

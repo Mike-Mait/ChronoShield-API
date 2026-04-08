@@ -8,19 +8,19 @@ import { AppError } from "../utils/errors";
 const BatchItemSchema = z.discriminatedUnion("operation", [
   z.object({
     operation: z.literal("validate"),
-    local_datetime: z.string().regex(
+    local_datetime: z.string().max(30).regex(
       /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/,
       "Must be ISO 8601 local datetime"
     ),
-    time_zone: z.string().min(1),
+    time_zone: z.string().min(1).max(100),
   }),
   z.object({
     operation: z.literal("resolve"),
-    local_datetime: z.string().regex(
+    local_datetime: z.string().max(30).regex(
       /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/,
       "Must be ISO 8601 local datetime"
     ),
-    time_zone: z.string().min(1),
+    time_zone: z.string().min(1).max(100),
     resolution_policy: z.object({
       ambiguous: z.enum(["earlier", "later", "reject"]).default("earlier"),
       invalid: z.enum(["next_valid_time", "previous_valid_time", "reject"]).default("next_valid_time"),
@@ -28,11 +28,11 @@ const BatchItemSchema = z.discriminatedUnion("operation", [
   }),
   z.object({
     operation: z.literal("convert"),
-    instant_utc: z.string().regex(
+    instant_utc: z.string().max(30).regex(
       /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?Z$/,
       "Must be ISO 8601 UTC datetime"
     ),
-    target_time_zone: z.string().min(1),
+    target_time_zone: z.string().min(1).max(100),
   }),
 ]);
 
@@ -97,6 +97,8 @@ export async function batchRoute(app: FastifyInstance) {
       if (!parsed.success) {
         return (reply as any).code(400).send({
           error: "Validation failed",
+          code: "VALIDATION_FAILED",
+          message: "Request body failed schema validation.",
           details: parsed.error.issues,
         });
       }

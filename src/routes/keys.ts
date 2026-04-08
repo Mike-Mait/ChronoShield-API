@@ -228,7 +228,11 @@ export async function keysRoute(app: FastifyInstance) {
       };
 
       if (!email || !email.includes("@")) {
-        return (reply as any).code(400).send({ error: "Valid email is required" });
+        return (reply as any).code(400).send({
+          error: "Valid email is required",
+          code: "VALIDATION_FAILED",
+          message: "Provide a valid email address to generate an API key.",
+        });
       }
 
       const { apiKey, isExisting, entry } = await createOrGetKey(
@@ -273,6 +277,8 @@ export async function keysRoute(app: FastifyInstance) {
           request.log.error(err, "Stripe checkout session creation failed");
           return (reply as any).code(500).send({
             error: "Failed to create checkout session",
+            code: "CHECKOUT_FAILED",
+            message: "Unable to initialize payment. Please try again later.",
           });
         }
       }

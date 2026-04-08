@@ -1,6 +1,7 @@
 import path from "path";
 import fs from "fs";
 import Fastify from "fastify";
+import fastifyCors from "@fastify/cors";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import { config } from "./config/env";
@@ -23,6 +24,7 @@ const app = Fastify({
         : undefined,
   },
   genReqId: () => crypto.randomUUID(),
+  bodyLimit: 1_048_576, // 1 MB
 });
 
 // Paths that skip API key auth
@@ -42,7 +44,11 @@ app.addHook("onRequest", async (request, reply) => {
 
   const apiKey = request.headers["x-api-key"] as string | undefined;
   if (!apiKey) {
-    return reply.code(401).send({ error: "Unauthorized: invalid or missing API key" });
+    return reply.code(401).send({
+      error: "Unauthorized",
+      code: "UNAUTHORIZED",
+      message: "Missing or invalid API key. Pass your key via the x-api-key header.",
+    });
   }
 
   // Check master key from environment
@@ -53,15 +59,18 @@ app.addHook("onRequest", async (request, reply) => {
   // Check dynamically generated keys from keyStore (DB + memory)
   const keyEntry = await lookupKeyAsync(apiKey);
   if (!keyEntry) {
-    return reply.code(401).send({ error: "Unauthorized: invalid or missing API key" });
+    return reply.code(401).send({
+      error: "Unauthorized",
+      code: "UNAUTHORIZED",
+      message: "Missing or invalid API key. Pass your key via the x-api-key header.",
+    });
   }
 
   // Enforce rate limits
   if (keyEntry.requestsUsed >= keyEntry.requestsLimit) {
     return reply.code(429).send({
       error: "Rate limit exceeded",
-      limit: keyEntry.requestsLimit,
-      tier: keyEntry.tier,
+      code: "RATE_LIMIT_EXCEEDED",
       message: keyEntry.tier === "free"
         ? "Upgrade to Pro for 100,000 requests/month."
         : "Contact us for enterprise limits.",
@@ -96,15 +105,28 @@ app.setErrorHandler(async (error, request, reply) => {
   if (error instanceof AppError) {
     return reply.code(error.statusCode).send({
       error: error.message,
-      code: error.code,
+      code: error.code || "APP_ERROR",
+      message: error.message,
     });
   }
 
   request.log.error(error);
-  return reply.code(500).send({ error: "Internal server error" });
+  return reply.code(500).send({
+    error: "Internal server error",
+    code: "INTERNAL_ERROR",
+    message: "An unexpected error occurred.",
+  });
 });
 
 async function start() {
+  // CORS
+  await app.register(fastifyCors, {
+    origin: true,
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "x-api-key"],
+    exposedHeaders: ["X-API-Version", "X-Powered-By"],
+  });
+
   // Swagger / OpenAPI
   await app.register(fastifySwagger, {
     openapi: {
