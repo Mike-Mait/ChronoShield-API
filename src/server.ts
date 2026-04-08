@@ -28,7 +28,7 @@ const app = Fastify({
 });
 
 // Paths that skip API key auth
-const publicPaths = ["/health", "/status", "/docs", "/api/keys", "/api/webhooks", "/docs/playground", "/terms", "/privacy"];
+const publicPaths = ["/health", "/status", "/docs", "/api/keys", "/api/webhooks", "/docs/playground", "/terms", "/privacy", "/aup", "/.well-known"];
 
 // API key auth hook
 app.addHook("onRequest", async (request, reply) => {
@@ -226,6 +226,25 @@ async function start() {
     const htmlPath = path.join(__dirname, "public", "privacy.html");
     const html = fs.readFileSync(htmlPath, "utf-8");
     return reply.type("text/html").send(html);
+  });
+
+  // Acceptable Use Policy
+  app.get("/aup", { schema: { hide: true } }, async (_request, reply) => {
+    const htmlPath = path.join(__dirname, "public", "aup.html");
+    const html = fs.readFileSync(htmlPath, "utf-8");
+    return reply.type("text/html").send(html);
+  });
+
+  // Security.txt (IETF RFC 9116)
+  const securityTxt = [
+    "Contact: mailto:security@chronoshieldapi.com",
+    "Preferred-Languages: en",
+    "Canonical: https://chronoshieldapi.com/.well-known/security.txt",
+    `Expires: ${new Date(Date.now() + 365 * 86400000).toISOString()}`,
+  ].join("\n");
+
+  app.get("/.well-known/security.txt", { schema: { hide: true } }, async (_request, reply) => {
+    return reply.type("text/plain").send(securityTxt);
   });
 
   // Landing page

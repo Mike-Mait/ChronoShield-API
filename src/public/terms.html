@@ -340,5 +340,21 @@
     </div>
   </footer>
 
+  <!-- ─── COOKIE CONSENT BANNER ─── -->
+  <div id="cookie-banner" class="hidden fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 py-3 px-6">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+      <p>This site uses no tracking or advertising cookies. We use only essential cookies for site functionality. See our <a href="/privacy#cookies" class="text-brand-400 hover:underline">Privacy Policy</a> for details.</p>
+      <button onclick="dismissCookieBanner()" class="shrink-0 px-4 py-1.5 rounded-md bg-brand-500 hover:bg-brand-600 text-white font-medium transition-colors cursor-pointer">Got it</button>
+    </div>
+  </div>
+  <script>
+    if (!localStorage.getItem('cookie-consent-dismissed')) {
+      document.getElementById('cookie-banner').classList.remove('hidden');
+    }
+    function dismissCookieBanner() {
+      document.getElementById('cookie-banner').classList.add('hidden');
+      localStorage.setItem('cookie-consent-dismissed', '1');
+    }
+  </script>
 </body>
 </html>

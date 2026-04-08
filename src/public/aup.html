@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acceptable Use Policy &mdash; ChronoShield API</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50:'#eef6ff', 100:'#d9eaff', 200:'#bcdaff', 300:'#8ec2ff', 400:'#59a0ff', 500:'#3378ff', 600:'#1b57f5', 700:'#1543e1', 800:'#1837b6', 900:'#1a328f', 950:'#141f57' },
+          },
+          fontFamily: { mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'] },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .sidebar-link { transition: color .15s; }
+    .sidebar-link:hover, .sidebar-link.active { color: #59a0ff; }
+  </style>
+</head>
+<body class="bg-brand-950 text-white antialiased">
+
+  <!-- ─── TOP BAR ─── -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-brand-950/90 backdrop-blur-md border-b border-slate-800/60">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+          <path d="M32 4L8 16v16c0 14.4 10.24 27.84 24 32 13.76-4.16 24-17.6 24-32V16L32 4z" fill="url(#shield-grad)" stroke="url(#shield-stroke)" stroke-width="2"/>
+          <circle cx="32" cy="32" r="13" fill="#0f172a" stroke="#8ec2ff" stroke-width="1.5" opacity=".9"/>
+          <line x1="32" y1="21" x2="32" y2="23" stroke="#8ec2ff" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="32" y1="41" x2="32" y2="43" stroke="#8ec2ff" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="21" y1="32" x2="23" y2="32" stroke="#8ec2ff" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="41" y1="32" x2="43" y2="32" stroke="#8ec2ff" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="32" y1="32" x2="32" y2="25" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <line x1="32" y1="32" x2="38" y2="28" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="32" cy="32" r="1.5" fill="white"/>
+          <defs>
+            <linearGradient id="shield-grad" x1="8" y1="4" x2="56" y2="64" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3378ff" stop-opacity=".15"/><stop offset="1" stop-color="#8ec2ff" stop-opacity=".05"/>
+            </linearGradient>
+            <linearGradient id="shield-stroke" x1="8" y1="4" x2="56" y2="64" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3378ff"/><stop offset="1" stop-color="#8ec2ff"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <a href="/" class="text-lg font-bold tracking-tight text-white">Chrono<span class="text-brand-400">Shield</span> <span class="text-brand-300 text-sm font-semibold">API</span></a>
+      </div>
+      <nav class="flex items-center gap-6 text-sm text-slate-400">
+        <a href="/docs" class="hover:text-white transition-colors">Docs</a>
+        <a href="/docs/playground" class="hover:text-white transition-colors">Playground</a>
+        <a href="https://chronoshield-api.betteruptime.com" class="hover:text-white transition-colors">Status</a>
+        <a href="https://github.com/Mike-Mait/ChronoShield-API" class="hover:text-white transition-colors">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ─── MAIN CONTENT ─── -->
+  <div class="pt-24 pb-16 max-w-5xl mx-auto px-6 flex gap-12">
+
+    <!-- Sidebar -->
+    <aside class="hidden lg:block w-56 shrink-0">
+      <nav class="sticky top-28 space-y-2 text-sm text-slate-500">
+        <a href="#overview" class="sidebar-link block">Overview</a>
+        <a href="#prohibited-uses" class="sidebar-link block">Prohibited Uses</a>
+        <a href="#rate-limit-abuse" class="sidebar-link block">Rate Limit Abuse</a>
+        <a href="#security" class="sidebar-link block">Security</a>
+        <a href="#monitoring" class="sidebar-link block">Monitoring & Enforcement</a>
+        <a href="#reporting" class="sidebar-link block">Reporting Violations</a>
+        <a href="#consequences" class="sidebar-link block">Consequences</a>
+        <a href="#contact" class="sidebar-link block">Contact</a>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <main class="min-w-0 flex-1">
+      <h1 class="text-3xl font-bold mb-2">Acceptable Use Policy</h1>
+      <p class="text-sm text-slate-500 mb-10">Last updated: April 7, 2026</p>
+
+      <!-- 1. Overview -->
+      <section id="overview" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">1. Overview</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          This Acceptable Use Policy ("AUP") supplements the <a href="/terms" class="text-brand-400 hover:text-brand-300 underline">Terms of Service</a> and governs acceptable behavior when using the ChronoShield API, website, documentation, and related services (collectively, the "Service").
+        </p>
+        <p class="text-slate-300 leading-relaxed">
+          By using the Service, you agree to comply with this AUP. We reserve the right to update this policy at any time. Material changes will be communicated via the email associated with your API key.
+        </p>
+      </section>
+
+      <!-- 2. Prohibited Uses -->
+      <section id="prohibited-uses" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">2. Prohibited Uses</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          You must not use the Service to:
+        </p>
+        <ul class="text-slate-300 leading-relaxed list-disc list-inside space-y-2">
+          <li><strong class="text-white">Disrupt or degrade the Service</strong> &mdash; Including denial-of-service attacks, intentional overloading, or any activity designed to impair service availability for other users.</li>
+          <li><strong class="text-white">Circumvent access controls</strong> &mdash; Including bypassing API key authentication, rate limits, or other security mechanisms through any means.</li>
+          <li><strong class="text-white">Scrape or harvest data</strong> &mdash; Using automated means to systematically extract data from the Service beyond its intended API interface.</li>
+          <li><strong class="text-white">Facilitate unlawful activity</strong> &mdash; Using the Service in connection with any activity that violates applicable laws, regulations, or third-party rights.</li>
+          <li><strong class="text-white">Impersonate or misrepresent</strong> &mdash; Falsifying your identity, email address, or organizational affiliation when registering for or using the Service.</li>
+          <li><strong class="text-white">Redistribute API access</strong> &mdash; Reselling, sublicensing, or providing proxy access to the API without prior written consent.</li>
+          <li><strong class="text-white">Exploit vulnerabilities</strong> &mdash; Attempting to probe, scan, or exploit security vulnerabilities in the Service. If you discover a vulnerability, please report it responsibly via our <a href="/.well-known/security.txt" class="text-brand-400 hover:text-brand-300 underline">security disclosure process</a>.</li>
+        </ul>
+      </section>
+
+      <!-- 3. Rate Limit Abuse -->
+      <section id="rate-limit-abuse" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">3. Rate Limit Abuse</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          The following activities are considered rate limit abuse:
+        </p>
+        <ul class="text-slate-300 leading-relaxed list-disc list-inside space-y-2">
+          <li>Creating multiple accounts or API keys to circumvent per-key rate limits</li>
+          <li>Rotating API keys programmatically to evade usage tracking</li>
+          <li>Sending requests at a sustained rate designed to consume disproportionate resources</li>
+          <li>Using the batch endpoint to circumvent per-request rate counting</li>
+        </ul>
+        <p class="text-slate-300 leading-relaxed mt-3">
+          If you need higher limits than your current tier provides, please <a href="mailto:support@chronoshieldapi.com" class="text-brand-400 hover:text-brand-300 underline">contact us</a> to discuss an upgrade or enterprise plan.
+        </p>
+      </section>
+
+      <!-- 4. Security -->
+      <section id="security" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">4. Security Responsibilities</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          You are responsible for:
+        </p>
+        <ul class="text-slate-300 leading-relaxed list-disc list-inside space-y-2">
+          <li>Keeping your API key confidential and not exposing it in client-side code, public repositories, or logs</li>
+          <li>Rotating your API key immediately if you suspect it has been compromised</li>
+          <li>Implementing appropriate security measures in your own applications that integrate with the API</li>
+          <li>Notifying us promptly at <a href="mailto:support@chronoshieldapi.com" class="text-brand-400 hover:text-brand-300 underline">support@chronoshieldapi.com</a> if you become aware of any unauthorized use of your key</li>
+        </ul>
+      </section>
+
+      <!-- 5. Monitoring & Enforcement -->
+      <section id="monitoring" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">5. Monitoring & Enforcement</h2>
+        <p class="text-slate-300 leading-relaxed">
+          We monitor API usage patterns to detect abuse, ensure fair resource allocation, and maintain service quality. This monitoring includes request volumes, error rates, and traffic patterns. We do not inspect the content of your API requests beyond what is necessary for processing.
+        </p>
+      </section>
+
+      <!-- 6. Reporting Violations -->
+      <section id="reporting" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">6. Reporting Violations</h2>
+        <p class="text-slate-300 leading-relaxed">
+          If you become aware of any use of the Service that violates this AUP, please report it to
+          <a href="mailto:support@chronoshieldapi.com" class="text-brand-400 hover:text-brand-300 underline">support@chronoshieldapi.com</a>.
+          We investigate all reports and take appropriate action.
+        </p>
+      </section>
+
+      <!-- 7. Consequences -->
+      <section id="consequences" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">7. Consequences of Violation</h2>
+        <p class="text-slate-300 leading-relaxed mb-3">
+          Violations of this AUP may result in one or more of the following, at our sole discretion:
+        </p>
+        <ul class="text-slate-300 leading-relaxed list-disc list-inside space-y-1">
+          <li>A written warning</li>
+          <li>Temporary throttling or rate limiting of your API key</li>
+          <li>Temporary suspension of API access</li>
+          <li>Permanent revocation of your API key and termination of your account</li>
+          <li>Referral to law enforcement if criminal activity is suspected</li>
+        </ul>
+        <p class="text-slate-300 leading-relaxed mt-3">
+          Where possible, we will provide notice before taking action. However, we reserve the right to act immediately and without notice when necessary to protect the Service, its infrastructure, or other users.
+        </p>
+      </section>
+
+      <!-- 8. Contact -->
+      <section id="contact" class="mb-10 scroll-mt-28">
+        <h2 class="text-xl font-semibold text-white mb-3">8. Contact</h2>
+        <p class="text-slate-300 leading-relaxed">
+          Questions about this Acceptable Use Policy can be directed to
+          <a href="mailto:support@chronoshieldapi.com" class="text-brand-400 hover:text-brand-300 underline">support@chronoshieldapi.com</a>.
+        </p>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ─── FOOTER ─── -->
+  <footer class="border-t border-slate-800/50 py-8">
+    <div class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
+      <span>&copy; 2026 ChronoShield API. All rights reserved.</span>
+      <div class="flex gap-6">
+        <a href="/docs" class="hover:text-slate-400 transition-colors">API Docs</a>
+        <a href="https://chronoshield-api.betteruptime.com" class="hover:text-slate-400 transition-colors">Status</a>
+        <a href="https://github.com/Mike-Mait/ChronoShield-API/blob/master/CHANGELOG.md" class="hover:text-slate-400 transition-colors">Changelog</a>
+        <a href="https://github.com/Mike-Mait/ChronoShield-API" class="hover:text-slate-400 transition-colors">GitHub</a>
+        <a href="/terms" class="hover:text-slate-400 transition-colors">Terms</a>
+        <a href="/privacy" class="hover:text-slate-400 transition-colors">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ─── COOKIE CONSENT BANNER ─── -->
+  <div id="cookie-banner" class="hidden fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 py-3 px-6">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+      <p>This site uses no tracking or advertising cookies. We use only essential cookies for site functionality. See our <a href="/privacy#cookies" class="text-brand-400 hover:underline">Privacy Policy</a> for details.</p>
+      <button onclick="dismissCookieBanner()" class="shrink-0 px-4 py-1.5 rounded-md bg-brand-500 hover:bg-brand-600 text-white font-medium transition-colors cursor-pointer">Got it</button>
+    </div>
+  </div>
+  <script>
+    if (!localStorage.getItem('cookie-consent-dismissed')) {
+      document.getElementById('cookie-banner').classList.remove('hidden');
+    }
+    function dismissCookieBanner() {
+      document.getElementById('cookie-banner').classList.add('hidden');
+      localStorage.setItem('cookie-consent-dismissed', '1');
+    }
+  </script>
+</body>
+</html>
