@@ -86,7 +86,7 @@ app.addHook("onRequest", async (request, reply) => {
 
 // API version + rate-limit headers
 app.addHook("onSend", async (request, reply) => {
-  reply.header("X-API-Version", "1.1.0");
+  reply.header("X-API-Version", "1.2.0");
   reply.header("X-Powered-By", "ChronoShield API");
 });
 
@@ -137,7 +137,7 @@ async function start() {
       info: {
         title: "ChronoShield API",
         description: "DST-aware datetime validation, resolution, and conversion API.\n\n**Need an API key?** [Get one free on the homepage](/) — no credit card required. Then click **Authorize** above and paste your key.",
-        version: "1.1.0",
+        version: "1.2.0",
       },
       servers: [
         { url: config.baseUrl, description: "Production" },
@@ -185,7 +185,7 @@ async function start() {
 
     return {
       status: "operational",
-      version: "1.1.0",
+      version: "1.2.0",
       uptime: `${days}d ${hours}h ${minutes}m`,
       uptime_seconds: uptimeSec,
       started_at: startedAt.toISOString(),

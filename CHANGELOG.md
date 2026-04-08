@@ -4,6 +4,29 @@ All notable changes to ChronoShield API will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.2.0] - 2026-04-07
+
+### Added
+- **CORS support** — configured `@fastify/cors` with allowed origins, methods, and headers for browser-based API integrations
+- **Cookie consent banner** — dismissible, non-tracking banner on all pages with localStorage persistence
+- **Acceptable Use Policy** — standalone `/aup` page covering prohibited uses, rate limit abuse, and enforcement
+- **Security disclosure** — `/.well-known/security.txt` endpoint (IETF RFC 9116) for vulnerability reporting
+- **Billing, Cancellation & Refunds** — new section 7 in Terms of Service documenting Pro tier cancellation and 7-day refund policy
+- **Public status page** — uptime monitoring and incident history at [chronoshield-api.betteruptime.com](https://chronoshield-api.betteruptime.com)
+- **Request payload limits** — 1 MB body limit on Fastify, max string length constraints on all Zod schemas
+
+### Changed
+- **Error responses standardized** — all errors now return consistent `{ error, code, message }` schema with machine-readable codes (e.g., `UNAUTHORIZED`, `VALIDATION_FAILED`, `RATE_LIMIT_EXCEEDED`)
+- **CORS preflight** — OPTIONS requests bypass auth to allow browser preflight to succeed
+- **Privacy Policy** — replaced "working toward GDPR" with concrete lawful basis (Article 6(1)(b)) and DPA availability
+- **Status links** — all navigation links now point to Better Stack public status page
+- **SDK install commands** — labeled as "coming soon" until packages are published to npm/PyPI
+- **Build pipeline** — Prisma generate and migrate deploy now run automatically during build and start
+
+### Fixed
+- **CORS preflight 401** — auth hook was blocking OPTIONS requests before `@fastify/cors` could respond
+- **Prisma schema path** — build script now uses `--schema=src/db/prisma/schema.prisma` to match non-default location
+
 ## [1.1.0] - 2026-03-30
 
 ### Added
