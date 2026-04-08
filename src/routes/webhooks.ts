@@ -54,8 +54,10 @@ export async function webhooksRoute(app: FastifyInstance) {
           const customerId = session.customer;
 
           if (email) {
-            upgradeToProByEmail(email, customerId);
-            request.log.info({ email }, "User upgraded to Pro tier");
+            await upgradeToProByEmail(email, customerId);
+            request.log.info({ email, customerId }, "User upgraded to Pro tier");
+          } else {
+            request.log.warn({ sessionId: session.id }, "checkout.session.completed missing email");
           }
           break;
         }

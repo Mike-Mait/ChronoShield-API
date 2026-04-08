@@ -69,6 +69,9 @@ app.addHook("onRequest", async (request, reply) => {
     });
   }
 
+  // Store for rate-limit headers
+  (request as any).keyEntry = keyEntry;
+
   // Enforce rate limits
   if (keyEntry.requestsUsed >= keyEntry.requestsLimit) {
     return reply.code(429).send({
@@ -77,6 +80,9 @@ app.addHook("onRequest", async (request, reply) => {
       message: keyEntry.tier === "free"
         ? "Upgrade to Pro for 100,000 requests/month."
         : "Contact us for enterprise limits.",
+      requests_used: keyEntry.requestsUsed,
+      requests_limit: keyEntry.requestsLimit,
+      reset_at: keyEntry.resetAt?.toISOString() || null,
     });
   }
 
@@ -88,6 +94,15 @@ app.addHook("onRequest", async (request, reply) => {
 app.addHook("onSend", async (request, reply) => {
   reply.header("X-API-Version", "1.2.0");
   reply.header("X-Powered-By", "ChronoShield API");
+
+  const keyEntry = (request as any).keyEntry;
+  if (keyEntry) {
+    reply.header("X-RateLimit-Limit", keyEntry.requestsLimit);
+    reply.header("X-RateLimit-Remaining", Math.max(0, keyEntry.requestsLimit - keyEntry.requestsUsed - 1));
+    if (keyEntry.resetAt) {
+      reply.header("X-RateLimit-Reset", Math.floor(keyEntry.resetAt.getTime() / 1000));
+    }
+  }
 });
 
 // Request logging hook
@@ -127,7 +142,7 @@ async function start() {
     origin: true,
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type", "x-api-key"],
-    exposedHeaders: ["X-API-Version", "X-Powered-By"],
+    exposedHeaders: ["X-API-Version", "X-Powered-By", "X-RateLimit-Limit", "X-RateLimit-Remaining", "X-RateLimit-Reset"],
   });
 
   // Swagger / OpenAPI

@@ -11,7 +11,18 @@ interface KeyEntry {
   requestsUsed: number;
   requestsLimit: number;
   stripeCustomerId?: string;
+  resetAt: Date;
   createdAt: Date;
+}
+
+// ─── Usage reset helpers ───
+function getNextResetDate(): Date {
+  const now = new Date();
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
+}
+
+function isResetDue(resetAt: Date): boolean {
+  return new Date() >= resetAt;
 }
 
 // ─── In-memory fallback (used when DATABASE_URL is not set) ───
@@ -38,13 +49,26 @@ export async function lookupKeyAsync(apiKey: string): Promise<KeyEntry | null> {
         where: { keyHash: hashKey(apiKey) },
       });
       if (!record || !record.active) return null;
+
+      // Lazy monthly reset
+      let { requestsUsed } = record;
+      if (isResetDue(record.resetAt)) {
+        const nextReset = getNextResetDate();
+        await prisma.apiKey.update({
+          where: { keyHash: hashKey(apiKey) },
+          data: { requestsUsed: 0, resetAt: nextReset },
+        });
+        requestsUsed = 0;
+      }
+
       return {
         email: record.email,
         apiKey, // we don't store the raw key, but the caller already has it
         tier: record.tier as "free" | "pro",
-        requestsUsed: record.requestsUsed,
+        requestsUsed,
         requestsLimit: record.requestsLimit,
         stripeCustomerId: record.stripeCustomerId ?? undefined,
+        resetAt: record.resetAt,
         createdAt: record.createdAt,
       };
     } catch {
@@ -55,7 +79,21 @@ export async function lookupKeyAsync(apiKey: string): Promise<KeyEntry | null> {
   // Fallback to in-memory
   const email = memoryKeyIndex.get(apiKey);
   if (!email) return null;
-  return memoryKeyStore.get(email) || null;
+  const memEntry = memoryKeyStore.get(email);
+  if (!memEntry) return null;
+
+  // Lazy monthly reset (in-memory)
+  if (isResetDue(memEntry.resetAt)) {
+    memEntry.requestsUsed = 0;
+    memEntry.resetAt = getNextResetDate();
+    const cached = keyCache.get(apiKey);
+    if (cached) {
+      cached.requestsUsed = 0;
+      cached.resetAt = getNextResetDate();
+    }
+  }
+
+  return memEntry;
 }
 
 // Synchronous wrapper for auth hook compatibility
@@ -101,6 +139,12 @@ export async function upgradeToProByEmail(email: string, stripeCustomerId: strin
   const prisma = getPrisma();
   if (prisma) {
     try {
+      const existing = await prisma.apiKey.findUnique({ where: { email } });
+      if (existing?.stripeCustomerId && existing.stripeCustomerId !== stripeCustomerId) {
+        console.warn(
+          `Stripe customer ID changing for ${email}: ${existing.stripeCustomerId} → ${stripeCustomerId}`
+        );
+      }
       await prisma.apiKey.update({
         where: { email },
         data: {
@@ -189,6 +233,7 @@ interface CreateKeyResult {
   entry: KeyEntry | null;
   dbTier?: string;
   dbRequestsLimit?: number;
+  dbStripeCustomerId?: string | null;
 }
 
 async function createOrGetKey(
@@ -215,6 +260,7 @@ async function createOrGetKey(
           entry: null,
           dbTier: existing.tier as "free" | "pro",
           dbRequestsLimit: existing.requestsLimit,
+          dbStripeCustomerId: existing.stripeCustomerId,
         };
       }
     } catch {
@@ -230,13 +276,14 @@ async function createOrGetKey(
 
   // Create new key
   const apiKey = generateApiKey();
-  const limit = tier === "pro" ? 100_000 : 1_000;
+  const resetAt = getNextResetDate();
   const entry: KeyEntry = {
     email,
     apiKey,
-    tier: tier === "pro" ? "free" : "free", // start as free until payment
+    tier: "free", // start as free until payment
     requestsUsed: 0,
-    requestsLimit: limit,
+    requestsLimit: 1_000,
+    resetAt,
     createdAt: new Date(),
   };
 
@@ -250,15 +297,13 @@ async function createOrGetKey(
           tier: "free",
           requestsUsed: 0,
           requestsLimit: 1_000,
+          resetAt,
         },
       });
     } catch {
       // DB error — continue with memory only
     }
   }
-
-  // Always store in memory + cache
-  entry.requestsLimit = 1_000; // always start as free
   memoryKeyStore.set(email, entry);
   memoryKeyIndex.set(apiKey, email);
   keyCache.set(apiKey, entry);
@@ -293,6 +338,14 @@ export async function keysRoute(app: FastifyInstance) {
       // Key exists in DB but can't be recovered (server restarted)
       if (result.isExisting && result.apiKey === null) {
         if (tier === "pro") {
+          // Block if already on Pro
+          if (result.dbTier === "pro") {
+            return reply.send({
+              tier: "pro",
+              message: "This account is already subscribed to Pro. Use the API key you were given when you first signed up.",
+            });
+          }
+
           // Still allow Pro upgrade — webhook upgrades by email
           if (!config.stripeSecretKey) {
             return reply.send({
@@ -347,6 +400,16 @@ export async function keysRoute(app: FastifyInstance) {
       };
 
       if (tier === "pro") {
+        // Block if already on Pro
+        if (entry.tier === "pro") {
+          return reply.send({
+            api_key: apiKey,
+            tier: "pro",
+            requests_limit: entry.requestsLimit,
+            message: "This account is already subscribed to Pro.",
+          });
+        }
+
         // Create Stripe Checkout session
         if (!config.stripeSecretKey) {
           return reply.send({
@@ -369,8 +432,8 @@ export async function keysRoute(app: FastifyInstance) {
                 quantity: 1,
               },
             ],
-            metadata: { email, api_key: apiKey },
-            success_url: `${config.baseUrl}/?checkout=success&key=${apiKey}`,
+            metadata: { email },
+            success_url: `${config.baseUrl}/?checkout=success`,
             cancel_url: `${config.baseUrl}/?checkout=cancelled`,
           });
 

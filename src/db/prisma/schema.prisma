@@ -14,10 +14,11 @@ model ApiKey {
   tier            String   @default("free")
   requestsUsed    Int      @default(0) @map("requests_used")
   requestsLimit   Int      @default(1000) @map("requests_limit")
-  stripeCustomerId String? @map("stripe_customer_id")
-  active          Boolean  @default(true)
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  stripeCustomerId String?  @map("stripe_customer_id")
+  active           Boolean  @default(true)
+  resetAt          DateTime @default(now()) @map("reset_at")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
 
   requestLogs RequestLog[]
 

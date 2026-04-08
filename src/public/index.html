@@ -804,6 +804,8 @@ result = cg.validate(
         if (!res.ok) throw new Error(data.error || 'Something went wrong');
 
         if (data.checkout_url) {
+          // Save email so we can fetch key after checkout return
+          sessionStorage.setItem('checkout_email', email);
           document.getElementById('key-form').classList.add('hidden');
           document.getElementById('pro-redirect').classList.remove('hidden');
           window.location.href = data.checkout_url;
@@ -832,32 +834,41 @@ result = cg.validate(
     }
 
     /* ── Handle checkout return ── */
-    (function handleCheckoutReturn() {
+    (async function handleCheckoutReturn() {
       const params = new URLSearchParams(window.location.search);
       const checkout = params.get('checkout');
-      const key = params.get('key');
 
-      if (checkout === 'success' && key) {
-        // Show modal with the key
+      if (checkout === 'success') {
+        const email = sessionStorage.getItem('checkout_email');
+        sessionStorage.removeItem('checkout_email');
+
         document.getElementById('modal-title').textContent = 'Payment successful!';
-        document.getElementById('modal-desc').textContent = 'Your Pro plan is now active. Here is your API key:';
         document.getElementById('key-form').classList.add('hidden');
-        document.getElementById('key-success').classList.remove('hidden');
-        document.getElementById('api-key-display').textContent = key;
         const overlay = document.getElementById('modal-overlay');
         overlay.classList.remove('hidden');
         overlay.classList.add('flex');
-        // Clean URL
         window.history.replaceState({}, '', '/');
-      } else if (checkout === 'success' && !key) {
-        // Pro upgrade for existing key (key not shown — user already has it)
-        document.getElementById('modal-title').textContent = 'Payment successful!';
+
+        if (email) {
+          // Try to fetch the key (works if same server session)
+          try {
+            const res = await fetch('/api/keys', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email }),
+            });
+            const data = await res.json();
+            if (data.api_key) {
+              document.getElementById('modal-desc').textContent = 'Your Pro plan is now active. Here is your API key:';
+              document.getElementById('key-success').classList.remove('hidden');
+              document.getElementById('api-key-display').textContent = data.api_key;
+              return;
+            }
+          } catch {}
+        }
+
+        // Fallback: key can't be recovered
         document.getElementById('modal-desc').textContent = 'Your Pro plan is now active. Your existing API key has been upgraded to Pro tier.';
-        document.getElementById('key-form').classList.add('hidden');
-        const overlay = document.getElementById('modal-overlay');
-        overlay.classList.remove('hidden');
-        overlay.classList.add('flex');
-        window.history.replaceState({}, '', '/');
       } else if (checkout === 'cancelled') {
         document.getElementById('modal-title').textContent = 'Checkout cancelled';
         document.getElementById('modal-desc').textContent = 'No worries — you can try again any time, or start with the free tier.';
