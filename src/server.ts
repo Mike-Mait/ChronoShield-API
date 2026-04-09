@@ -25,6 +25,7 @@ const app = Fastify({
   },
   genReqId: () => crypto.randomUUID(),
   bodyLimit: 1_048_576, // 1 MB
+  trustProxy: true, // Railway runs behind a reverse proxy
 });
 
 // Paths that skip API key auth
