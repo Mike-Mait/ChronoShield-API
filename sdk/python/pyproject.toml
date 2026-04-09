@@ -10,7 +10,25 @@ readme = "README.md"
 license = "ISC"
 requires-python = ">=3.8"
 keywords = ["timezone", "dst", "daylight-saving", "datetime", "validation", "utc", "iana", "chronoshield"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries",
+    "Typing :: Typed",
+]
+
+[[project.authors]]
+name = "Mike Mait"
 
 [project.urls]
-Homepage = "https://chronoshieldapi.com/docs"
+Homepage = "https://chronoshieldapi.com"
+Documentation = "https://chronoshieldapi.com/docs"
 Repository = "https://github.com/Mike-Mait/ChronoShield-API"
+Issues = "https://github.com/Mike-Mait/ChronoShield-API/issues"

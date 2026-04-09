@@ -9,11 +9,18 @@
   },
   "files": ["dist"],
   "keywords": ["timezone", "dst", "daylight-saving", "datetime", "validation", "utc", "iana", "chronoshield"],
+  "author": "Mike Mait",
   "repository": {
     "type": "git",
     "url": "https://github.com/Mike-Mait/ChronoShield-API.git",
     "directory": "sdk/typescript"
   },
   "homepage": "https://chronoshieldapi.com/docs",
-  "license": "ISC"
+  "bugs": {
+    "url": "https://github.com/Mike-Mait/ChronoShield-API/issues"
+  },
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }
