@@ -828,9 +828,20 @@ result = cg.validate(
 
     function copyKey() {
       const key = document.getElementById('api-key-display').textContent;
-      navigator.clipboard.writeText(key);
-      document.getElementById('copy-btn').textContent = 'Copied!';
-      setTimeout(() => document.getElementById('copy-btn').textContent = 'Copy', 2000);
+      navigator.clipboard.writeText(key).then(() => {
+        document.getElementById('copy-btn').textContent = 'Copied!';
+        setTimeout(() => document.getElementById('copy-btn').textContent = 'Copy', 2000);
+      }).catch(() => {
+        // Fallback: select text for manual copy
+        const el = document.getElementById('api-key-display');
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        document.getElementById('copy-btn').textContent = 'Select & copy manually';
+        setTimeout(() => document.getElementById('copy-btn').textContent = 'Copy', 3000);
+      });
     }
 
     /* ── Handle checkout return ── */

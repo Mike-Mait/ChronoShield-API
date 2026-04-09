@@ -90,10 +90,14 @@ app.addHook("onRequest", async (request, reply) => {
   incrementUsage(apiKey);
 });
 
-// API version + rate-limit headers
+// API version + rate-limit + security headers
 app.addHook("onSend", async (request, reply) => {
   reply.header("X-API-Version", "1.2.0");
   reply.header("X-Powered-By", "ChronoShield API");
+  reply.header("X-Content-Type-Options", "nosniff");
+  reply.header("X-Frame-Options", "DENY");
+  reply.header("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  reply.header("Referrer-Policy", "strict-origin-when-cross-origin");
 
   const keyEntry = (request as any).keyEntry;
   if (keyEntry) {
@@ -207,8 +211,6 @@ async function start() {
       database: dbStatus,
       timezone_data: {
         iana_version: process.versions.tz || "unknown",
-        icu_version: process.versions.icu || "unknown",
-        node_version: process.version,
       },
       endpoints: {
         validate: "/v1/datetime/validate",
@@ -222,32 +224,30 @@ async function start() {
     };
   });
 
+  // Pre-load static HTML files into memory
+  const htmlCache: Record<string, string> = {};
+  for (const page of ["index", "docs", "terms", "privacy", "aup"]) {
+    htmlCache[page] = fs.readFileSync(path.join(__dirname, "public", `${page}.html`), "utf-8");
+  }
+
   // Custom docs page
   app.get("/docs", { schema: { hide: true } }, async (_request, reply) => {
-    const htmlPath = path.join(__dirname, "public", "docs.html");
-    const html = fs.readFileSync(htmlPath, "utf-8");
-    return reply.type("text/html").send(html);
+    return reply.type("text/html").send(htmlCache.docs);
   });
 
   // Terms of Service
   app.get("/terms", { schema: { hide: true } }, async (_request, reply) => {
-    const htmlPath = path.join(__dirname, "public", "terms.html");
-    const html = fs.readFileSync(htmlPath, "utf-8");
-    return reply.type("text/html").send(html);
+    return reply.type("text/html").send(htmlCache.terms);
   });
 
   // Privacy Policy
   app.get("/privacy", { schema: { hide: true } }, async (_request, reply) => {
-    const htmlPath = path.join(__dirname, "public", "privacy.html");
-    const html = fs.readFileSync(htmlPath, "utf-8");
-    return reply.type("text/html").send(html);
+    return reply.type("text/html").send(htmlCache.privacy);
   });
 
   // Acceptable Use Policy
   app.get("/aup", { schema: { hide: true } }, async (_request, reply) => {
-    const htmlPath = path.join(__dirname, "public", "aup.html");
-    const html = fs.readFileSync(htmlPath, "utf-8");
-    return reply.type("text/html").send(html);
+    return reply.type("text/html").send(htmlCache.aup);
   });
 
   // Security.txt (IETF RFC 9116)
@@ -264,9 +264,7 @@ async function start() {
 
   // Landing page
   app.get("/", { schema: { hide: true } }, async (_request, reply) => {
-    const htmlPath = path.join(__dirname, "public", "index.html");
-    const html = fs.readFileSync(htmlPath, "utf-8");
-    return reply.type("text/html").send(html);
+    return reply.type("text/html").send(htmlCache.index);
   });
 
   // API routes

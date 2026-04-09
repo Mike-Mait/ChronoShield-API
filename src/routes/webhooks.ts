@@ -41,7 +41,7 @@ export async function webhooksRoute(app: FastifyInstance) {
         return (reply as any).code(400).send({
           error: "Webhook signature verification failed",
           code: "WEBHOOK_ERROR",
-          message: err.message,
+          message: "Invalid webhook signature.",
         });
       }
 

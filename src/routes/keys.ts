@@ -311,18 +311,44 @@ async function createOrGetKey(
   return { apiKey, isExisting: false, entry };
 }
 
+// ─── Rate limiter for /api/keys ───
+const keyRequestCounts = new Map<string, { count: number; resetAt: number }>();
+const KEY_RATE_LIMIT = 10; // max requests per window
+const KEY_RATE_WINDOW_MS = 60_000; // 1 minute
+
+function checkKeyRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = keyRequestCounts.get(ip);
+  if (!entry || now >= entry.resetAt) {
+    keyRequestCounts.set(ip, { count: 1, resetAt: now + KEY_RATE_WINDOW_MS });
+    return true;
+  }
+  entry.count++;
+  return entry.count <= KEY_RATE_LIMIT;
+}
+
 // ─── Route ───
 export async function keysRoute(app: FastifyInstance) {
   app.post(
     "/api/keys",
     { schema: { hide: true } },
     async (request, reply) => {
+      const clientIp = request.ip;
+      if (!checkKeyRateLimit(clientIp)) {
+        return (reply as any).code(429).send({
+          error: "Too many requests",
+          code: "RATE_LIMIT_EXCEEDED",
+          message: "Too many key requests. Please try again in a minute.",
+        });
+      }
+
       const { email, tier } = request.body as {
         email?: string;
         tier?: string;
       };
 
-      if (!email || !email.includes("@")) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || email.length > 254 || !emailRegex.test(email)) {
         return (reply as any).code(400).send({
           error: "Valid email is required",
           code: "VALIDATION_FAILED",

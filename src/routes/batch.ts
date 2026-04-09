@@ -83,7 +83,25 @@ export async function batchRoute(app: FastifyInstance) {
           200: {
             type: "object",
             properties: {
-              results: { type: "array" },
+              results: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    index: { type: "number" },
+                    operation: { type: "string" },
+                    success: { type: "boolean" },
+                    data: { type: "object", additionalProperties: true },
+                    error: {
+                      type: "object",
+                      properties: {
+                        message: { type: "string" },
+                        code: { type: "string" },
+                      },
+                    },
+                  },
+                },
+              },
               total: { type: "number" },
               succeeded: { type: "number" },
               failed: { type: "number" },
