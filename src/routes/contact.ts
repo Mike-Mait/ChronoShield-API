@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { getPrisma } from "../db/client";
+import { sendContactNotification } from "../utils/email";
 
 const VALID_PLANS = ["starter", "growth", "strategic"];
 
@@ -129,6 +130,15 @@ export async function contactRoute(app: FastifyInstance) {
           }
         }
       }
+
+      // Send email notification (fire-and-forget — don't block response)
+      sendContactNotification({
+        plan: plan!,
+        name: name!,
+        email: email!,
+        company: (company || "").slice(0, 200),
+        message: message!,
+      }).catch((err) => request.log.warn(err, "Failed to send contact notification email"));
 
       request.log.info(
         { plan, email, name },

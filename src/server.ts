@@ -12,6 +12,7 @@ import { keysRoute } from "./routes/keys";
 import { batchRoute } from "./routes/batch";
 import { webhooksRoute } from "./routes/webhooks";
 import { contactRoute } from "./routes/contact";
+import { adminRoute } from "./routes/admin";
 import { AppError } from "./utils/errors";
 import { lookupKeyAsync, incrementUsage } from "./routes/keys";
 import { getPrisma, disconnectPrisma } from "./db/client";
@@ -122,6 +123,25 @@ app.addHook("onResponse", async (request, reply) => {
     },
     "request completed"
   );
+
+  // Write to RequestLog for authenticated API requests
+  const keyEntry = (request as any).keyEntry;
+  if (keyEntry) {
+    const prisma = getPrisma();
+    if (prisma) {
+      prisma.requestLog.create({
+        data: {
+          endpoint: request.url.split("?")[0],
+          method: request.method,
+          statusCode: reply.statusCode,
+          latencyMs: reply.elapsedTime,
+          apiKeyId: keyEntry.id || null,
+        },
+      }).catch((err: unknown) => {
+        request.log.warn(err, "Failed to write request log");
+      });
+    }
+  }
 });
 
 // Global error handler
@@ -276,6 +296,7 @@ async function start() {
   await app.register(batchRoute);
   await app.register(keysRoute);
   await app.register(contactRoute);
+  await app.register(adminRoute);
 
   // Stripe webhook needs its own encapsulated context for raw body parsing
   await app.register(webhooksRoute);

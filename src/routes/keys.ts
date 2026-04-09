@@ -5,6 +5,7 @@ import { getPrisma } from "../db/client";
 
 // ─── Types ───
 interface KeyEntry {
+  id?: string;
   email: string;
   apiKey: string;
   tier: "free" | "pro";
@@ -70,6 +71,7 @@ export async function lookupKeyAsync(apiKey: string): Promise<KeyEntry | null> {
       }
 
       return {
+        id: record.id,
         email: record.email,
         apiKey, // we don't store the raw key, but the caller already has it
         tier: record.tier as "free" | "pro",
