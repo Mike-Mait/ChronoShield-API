@@ -11,6 +11,7 @@ import { convertRoute } from "./routes/convert";
 import { keysRoute } from "./routes/keys";
 import { batchRoute } from "./routes/batch";
 import { webhooksRoute } from "./routes/webhooks";
+import { contactRoute } from "./routes/contact";
 import { AppError } from "./utils/errors";
 import { lookupKeyAsync, incrementUsage } from "./routes/keys";
 import { getPrisma, disconnectPrisma } from "./db/client";
@@ -29,7 +30,7 @@ const app = Fastify({
 });
 
 // Paths that skip API key auth
-const publicPaths = ["/health", "/status", "/docs", "/api/keys", "/api/webhooks", "/docs/playground", "/terms", "/privacy", "/aup", "/.well-known"];
+const publicPaths = ["/health", "/status", "/docs", "/api/keys", "/api/webhooks", "/api/contact", "/docs/playground", "/terms", "/privacy", "/aup", "/.well-known"];
 
 // API key auth hook
 app.addHook("onRequest", async (request, reply) => {
@@ -274,6 +275,7 @@ async function start() {
   await app.register(convertRoute);
   await app.register(batchRoute);
   await app.register(keysRoute);
+  await app.register(contactRoute);
 
   // Stripe webhook needs its own encapsulated context for raw body parsing
   await app.register(webhooksRoute);

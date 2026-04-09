@@ -39,3 +39,15 @@ model RequestLog {
   @@index([createdAt])
   @@map("request_logs")
 }
+
+model ContactInquiry {
+  id        String   @id @default(uuid())
+  plan      String
+  name      String
+  email     String
+  company   String   @default("")
+  message   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("contact_inquiries")
+}

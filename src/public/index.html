@@ -591,9 +591,9 @@ result = cg.validate(
             <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Invoice billing &amp; annual contract</li>
             <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Priority email support (48h SLA)</li>
           </ul>
-          <a href="mailto:mikemaittech@gmail.com?subject=ChronoShield%20API%20Enterprise%20Starter" class="mt-6 w-full py-3 rounded-lg border border-slate-700 hover:border-slate-500 text-white font-semibold text-sm transition-colors cursor-pointer text-center block">
+          <button onclick="openContactForm('starter')" class="mt-6 w-full py-3 rounded-lg border border-slate-700 hover:border-slate-500 text-white font-semibold text-sm transition-colors cursor-pointer text-center block">
             Contact Sales
-          </a>
+          </button>
         </div>
 
         <!-- Enterprise Growth -->
@@ -612,9 +612,9 @@ result = cg.validate(
             <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Named support contact (24h SLA)</li>
             <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Security questionnaire &amp; usage reporting</li>
           </ul>
-          <a href="mailto:mikemaittech@gmail.com?subject=ChronoShield%20API%20Enterprise%20Growth" class="mt-6 w-full py-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-semibold text-sm transition-colors shadow-lg shadow-amber-500/25 cursor-pointer text-center block">
+          <button onclick="openContactForm('growth')" class="mt-6 w-full py-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-semibold text-sm transition-colors shadow-lg shadow-amber-500/25 cursor-pointer text-center block">
             Contact Sales
-          </a>
+          </button>
         </div>
 
         <!-- Enterprise Strategic -->
@@ -631,9 +631,9 @@ result = cg.validate(
             <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Procurement &amp; legal support</li>
             <li class="flex items-start gap-2"><svg class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Private Slack channel &amp; onboarding</li>
           </ul>
-          <a href="mailto:mikemaittech@gmail.com?subject=ChronoShield%20API%20Enterprise%20Strategic" class="mt-6 w-full py-3 rounded-lg border border-slate-700 hover:border-slate-500 text-white font-semibold text-sm transition-colors cursor-pointer text-center block">
+          <button onclick="openContactForm('strategic')" class="mt-6 w-full py-3 rounded-lg border border-slate-700 hover:border-slate-500 text-white font-semibold text-sm transition-colors cursor-pointer text-center block">
             Contact Sales
-          </a>
+          </button>
         </div>
       </div>
 
@@ -728,7 +728,102 @@ result = cg.validate(
     </div>
   </div>
 
+  <!-- ─── CONTACT SALES MODAL ─── -->
+  <div id="contact-overlay" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-8 mx-4 max-w-md w-full shadow-2xl">
+      <h3 class="text-lg font-bold text-white" id="contact-title">Contact Sales</h3>
+      <p class="mt-2 text-sm text-slate-400" id="contact-desc">Tell us about your needs and we'll get back to you within 1-2 business days.</p>
+
+      <form id="contact-form" class="mt-6 space-y-4" onsubmit="submitContact(event)">
+        <input type="hidden" id="contact-plan" value="" />
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1.5" for="contact-name">Name *</label>
+          <input id="contact-name" type="text" required maxlength="200" placeholder="Your full name" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1.5" for="contact-email">Work email *</label>
+          <input id="contact-email" type="email" required maxlength="254" placeholder="you@company.com" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1.5" for="contact-company">Company</label>
+          <input id="contact-company" type="text" maxlength="200" placeholder="Company name (optional)" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1.5" for="contact-message">Message *</label>
+          <textarea id="contact-message" required maxlength="2000" rows="4" placeholder="Tell us about your use case, expected volume, and any requirements..." class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent resize-none"></textarea>
+        </div>
+        <button type="submit" id="contact-submit-btn" class="w-full py-3 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm transition-colors cursor-pointer">
+          Send Inquiry
+        </button>
+      </form>
+
+      <div id="contact-success" class="hidden mt-4 text-center">
+        <svg class="w-10 h-10 text-emerald-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        <p class="text-sm text-slate-300">Thank you! We'll be in touch within 1-2 business days.</p>
+      </div>
+
+      <button onclick="closeContactModal()" class="mt-6 w-full py-2 text-sm text-slate-500 hover:text-slate-300 transition-colors cursor-pointer">Close</button>
+    </div>
+  </div>
+
   <script>
+    /* ── Contact Sales modal ── */
+    const planLabels = { starter: 'Enterprise Starter', growth: 'Enterprise Growth', strategic: 'Enterprise Strategic' };
+
+    function openContactForm(plan) {
+      document.getElementById('contact-plan').value = plan;
+      document.getElementById('contact-title').textContent = 'Contact Sales — ' + (planLabels[plan] || plan);
+      document.getElementById('contact-form').classList.remove('hidden');
+      document.getElementById('contact-success').classList.add('hidden');
+      document.getElementById('contact-form').reset();
+      document.getElementById('contact-plan').value = plan;
+      const overlay = document.getElementById('contact-overlay');
+      overlay.classList.remove('hidden');
+      overlay.classList.add('flex');
+    }
+
+    function closeContactModal() {
+      const overlay = document.getElementById('contact-overlay');
+      overlay.classList.add('hidden');
+      overlay.classList.remove('flex');
+    }
+
+    document.getElementById('contact-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeContactModal();
+    });
+
+    async function submitContact(e) {
+      e.preventDefault();
+      const btn = document.getElementById('contact-submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            plan: document.getElementById('contact-plan').value,
+            name: document.getElementById('contact-name').value,
+            email: document.getElementById('contact-email').value,
+            company: document.getElementById('contact-company').value,
+            message: document.getElementById('contact-message').value,
+          }),
+        });
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.message || 'Something went wrong');
+
+        document.getElementById('contact-form').classList.add('hidden');
+        document.getElementById('contact-success').classList.remove('hidden');
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Send Inquiry';
+      }
+    }
+
     /* ── Tabs ── */
     /* ── Language tabs (Quick Integration) ── */
     function showLang(lang) {
