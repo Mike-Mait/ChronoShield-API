@@ -18,6 +18,13 @@ export function initSentry(): void {
         delete event.request.headers["authorization"];
         delete event.request.headers["cookie"];
       }
+      // Strip query params to avoid leaking data
+      if (event.request?.url) {
+        event.request.url = event.request.url.split("?")[0];
+      }
+      if (event.request?.query_string) {
+        delete event.request.query_string;
+      }
       return event;
     },
   });

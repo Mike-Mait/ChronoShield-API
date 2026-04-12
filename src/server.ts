@@ -104,6 +104,13 @@ app.addHook("onSend", async (request, reply) => {
   reply.header("X-Frame-Options", "DENY");
   reply.header("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
   reply.header("Referrer-Policy", "strict-origin-when-cross-origin");
+  reply.header("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
+
+  // Prevent caching of API responses
+  const pathname = request.url.split("?")[0];
+  if (pathname.startsWith("/v1/") || pathname.startsWith("/api/")) {
+    reply.header("Cache-Control", "no-store");
+  }
 
   const keyEntry = (request as any).keyEntry;
   if (keyEntry) {

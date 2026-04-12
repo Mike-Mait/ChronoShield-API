@@ -62,7 +62,7 @@ export async function adminRoute(app: FastifyInstance) {
           data: { active: false },
         });
 
-        request.log.info({ email }, "API key revoked by admin");
+        request.log.info({ email, requestId: request.id }, "API key revoked by admin");
         return reply.send({
           email,
           active: false,
@@ -133,7 +133,7 @@ export async function adminRoute(app: FastifyInstance) {
           data: { active: true },
         });
 
-        request.log.info({ email }, "API key activated by admin");
+        request.log.info({ email, requestId: request.id }, "API key activated by admin");
         return reply.send({
           email,
           active: true,

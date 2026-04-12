@@ -19,6 +19,10 @@ function getTransporter(): nodemailer.Transporter | null {
   return transporter;
 }
 
+function sanitizeForEmail(str: string): string {
+  return str.replace(/[\r\n]/g, " ").trim();
+}
+
 export async function sendContactNotification(inquiry: {
   plan: string;
   name: string;
@@ -29,11 +33,14 @@ export async function sendContactNotification(inquiry: {
   const mailer = getTransporter();
   if (!mailer) return false;
 
+  const safeName = sanitizeForEmail(inquiry.name);
+  const safePlan = sanitizeForEmail(inquiry.plan);
+
   try {
     await mailer.sendMail({
       from: config.smtpFrom,
       to: config.contactNotifyEmail,
-      subject: `[ChronoShield] New ${inquiry.plan} inquiry from ${inquiry.name}`,
+      subject: `[ChronoShield] New ${safePlan} inquiry from ${safeName}`,
       text: [
         `New enterprise contact inquiry received.`,
         ``,
