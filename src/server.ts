@@ -178,6 +178,11 @@ app.setErrorHandler(async (error, request, reply) => {
 });
 
 async function start() {
+  // Pre-load brand assets (SVG) so they can be wired into both route handlers
+  // and the Swagger UI theme config below.
+  const faviconSvg = fs.readFileSync(path.join(__dirname, "public", "favicon.svg"), "utf-8");
+  const logoSvg = fs.readFileSync(path.join(__dirname, "public", "logo.svg"), "utf-8");
+
   // CORS
   await app.register(fastifyCors, {
     origin: true,
@@ -214,6 +219,18 @@ async function start() {
 
   await app.register(fastifySwaggerUi, {
     routePrefix: "/docs/playground",
+    theme: {
+      title: "ChronoShield API — Playground",
+      favicon: [
+        {
+          filename: "favicon.svg",
+          rel: "icon",
+          type: "image/svg+xml",
+          sizes: "any",
+          content: faviconSvg,
+        },
+      ],
+    },
   });
 
   // Health check (simple)
@@ -266,10 +283,6 @@ async function start() {
   for (const page of ["index", "docs", "terms", "privacy", "aup"]) {
     htmlCache[page] = fs.readFileSync(path.join(__dirname, "public", `${page}.html`), "utf-8");
   }
-
-  // Pre-load brand assets (SVG) for favicon and logo
-  const faviconSvg = fs.readFileSync(path.join(__dirname, "public", "favicon.svg"), "utf-8");
-  const logoSvg = fs.readFileSync(path.join(__dirname, "public", "logo.svg"), "utf-8");
 
   app.get("/favicon.svg", { schema: { hide: true } }, async (_request, reply) => {
     return reply
