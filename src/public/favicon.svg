@@ -1,0 +1,23 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield -->
+  <path d="M32 4L8 16v16c0 14.4 10.24 27.84 24 32 13.76-4.16 24-17.6 24-32V16L32 4z" fill="#141f57" stroke="url(#shield-stroke)" stroke-width="2"/>
+  <!-- Clock face -->
+  <circle cx="32" cy="32" r="13" fill="#0f172a" stroke="#8ec2ff" stroke-width="1.5"/>
+  <!-- Hour marks -->
+  <line x1="32" y1="21" x2="32" y2="23" stroke="#8ec2ff" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="32" y1="41" x2="32" y2="43" stroke="#8ec2ff" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="21" y1="32" x2="23" y2="32" stroke="#8ec2ff" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="41" y1="32" x2="43" y2="32" stroke="#8ec2ff" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Hour hand -->
+  <line x1="32" y1="32" x2="32" y2="25" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <!-- Minute hand -->
+  <line x1="32" y1="32" x2="38" y2="28" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Center dot -->
+  <circle cx="32" cy="32" r="1.5" fill="white"/>
+  <defs>
+    <linearGradient id="shield-stroke" x1="8" y1="4" x2="56" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3378ff"/>
+      <stop offset="1" stop-color="#8ec2ff"/>
+    </linearGradient>
+  </defs>
+</svg>

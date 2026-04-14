@@ -34,7 +34,7 @@ const app = Fastify({
 });
 
 // Paths that skip API key auth
-const publicPaths = ["/health", "/status", "/docs", "/api/keys", "/api/webhooks", "/api/contact", "/docs/playground", "/terms", "/privacy", "/aup", "/.well-known"];
+const publicPaths = ["/health", "/status", "/docs", "/api/keys", "/api/webhooks", "/api/contact", "/docs/playground", "/terms", "/privacy", "/aup", "/.well-known", "/favicon", "/logo"];
 
 // API key auth hook
 app.addHook("onRequest", async (request, reply) => {
@@ -266,6 +266,24 @@ async function start() {
   for (const page of ["index", "docs", "terms", "privacy", "aup"]) {
     htmlCache[page] = fs.readFileSync(path.join(__dirname, "public", `${page}.html`), "utf-8");
   }
+
+  // Pre-load brand assets (SVG) for favicon and logo
+  const faviconSvg = fs.readFileSync(path.join(__dirname, "public", "favicon.svg"), "utf-8");
+  const logoSvg = fs.readFileSync(path.join(__dirname, "public", "logo.svg"), "utf-8");
+
+  app.get("/favicon.svg", { schema: { hide: true } }, async (_request, reply) => {
+    return reply
+      .type("image/svg+xml")
+      .header("Cache-Control", "public, max-age=86400")
+      .send(faviconSvg);
+  });
+
+  app.get("/logo.svg", { schema: { hide: true } }, async (_request, reply) => {
+    return reply
+      .type("image/svg+xml")
+      .header("Cache-Control", "public, max-age=86400")
+      .send(logoSvg);
+  });
 
   // Custom docs page
   app.get("/docs", { schema: { hide: true } }, async (_request, reply) => {

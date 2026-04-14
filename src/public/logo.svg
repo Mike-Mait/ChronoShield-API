@@ -1,0 +1,25 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="64" fill="#141f57"/>
+  <!-- Shield -->
+  <path d="M256 64L64 160v128c0 115.2 81.92 222.72 192 256 110.08-33.28 192-140.8 192-256V160L256 64z" fill="#1a328f" stroke="url(#logo-stroke)" stroke-width="8"/>
+  <!-- Clock face -->
+  <circle cx="256" cy="256" r="104" fill="#0f172a" stroke="#8ec2ff" stroke-width="6"/>
+  <!-- Hour marks -->
+  <line x1="256" y1="168" x2="256" y2="184" stroke="#8ec2ff" stroke-width="6" stroke-linecap="round"/>
+  <line x1="256" y1="328" x2="256" y2="344" stroke="#8ec2ff" stroke-width="6" stroke-linecap="round"/>
+  <line x1="168" y1="256" x2="184" y2="256" stroke="#8ec2ff" stroke-width="6" stroke-linecap="round"/>
+  <line x1="328" y1="256" x2="344" y2="256" stroke="#8ec2ff" stroke-width="6" stroke-linecap="round"/>
+  <!-- Hour hand -->
+  <line x1="256" y1="256" x2="256" y2="200" stroke="white" stroke-width="8" stroke-linecap="round"/>
+  <!-- Minute hand -->
+  <line x1="256" y1="256" x2="304" y2="224" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  <!-- Center dot -->
+  <circle cx="256" cy="256" r="8" fill="white"/>
+  <defs>
+    <linearGradient id="logo-stroke" x1="64" y1="64" x2="448" y2="512" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3378ff"/>
+      <stop offset="1" stop-color="#8ec2ff"/>
+    </linearGradient>
+  </defs>
+</svg>
