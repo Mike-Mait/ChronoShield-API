@@ -37,11 +37,11 @@ export async function sendResetKeyEmail(
 
   try {
     const info = await mailer.sendMail({
-      // Use the same verified sender the contact-form path uses, with a
-      // display name. Resend verifies the whole domain, but the API key may
-      // still be scoped to a specific sender — matching sendContactNotification
-      // avoids that class of issue.
-      from: `"ChronoShield API" <${config.smtpFrom}>`,
+      // Reset mail is a security/account communication, not a sales outreach
+      // — send it from the support address so the sender matches user
+      // expectation and replies route into the support queue. Falls back to
+      // smtpFrom if SMTP_FROM_SUPPORT is unset so deploys aren't blocked.
+      from: `"ChronoShield Support" <${config.smtpFromSupport}>`,
       to: toEmail,
       replyTo: "support@chronoshieldapi.com",
       subject: "[ChronoShield] Reset your API key",
@@ -102,7 +102,14 @@ export async function sendContactNotification(inquiry: {
       ].join("\n"),
     });
     return true;
-  } catch {
+  } catch (err: any) {
+    // Log the real SMTP error so quota/auth failures are visible in Railway
+    // logs. Caller treats this as best-effort so we don't re-throw, but
+    // silence here previously hid a dead sales@ inbox for days.
+    console.error(
+      "[sendContactNotification] SMTP send failed:",
+      err?.response || err?.message || err
+    );
     return false;
   }
 }

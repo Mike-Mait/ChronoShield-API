@@ -88,46 +88,19 @@ export async function contactRoute(app: FastifyInstance) {
             },
           });
         } catch (err: any) {
-          // If table doesn't exist yet, create it and retry
-          if (err.code === "P2010" || err.message?.includes("contact_inquiries")) {
-            try {
-              await prisma.$executeRawUnsafe(`
-                CREATE TABLE IF NOT EXISTS "contact_inquiries" (
-                  "id" TEXT NOT NULL,
-                  "plan" TEXT NOT NULL,
-                  "name" TEXT NOT NULL,
-                  "email" TEXT NOT NULL,
-                  "company" TEXT NOT NULL DEFAULT '',
-                  "message" TEXT NOT NULL,
-                  "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                  CONSTRAINT "contact_inquiries_pkey" PRIMARY KEY ("id")
-                )
-              `);
-              await prisma.contactInquiry.create({
-                data: {
-                  plan,
-                  name,
-                  email,
-                  company: (company || "").slice(0, 200),
-                  message,
-                },
-              });
-            } catch (retryErr) {
-              request.log.error(retryErr, "Failed to save contact inquiry after table creation");
-              return (reply as any).code(500).send({
-                error: "Internal error",
-                code: "INTERNAL_ERROR",
-                message: "Unable to submit inquiry. Please try again later.",
-              });
-            }
-          } else {
-            request.log.error(err, "Failed to save contact inquiry");
-            return (reply as any).code(500).send({
-              error: "Internal error",
-              code: "INTERNAL_ERROR",
-              message: "Unable to submit inquiry. Please try again later.",
-            });
-          }
+          // Previously this branch tried to self-heal by CREATE TABLE IF NOT
+          // EXISTS on P2010. That "helpful" shortcut is what drifted the
+          // schema out from under Prisma's migration system and caused the
+          // 42P07/P3009 deploy loop — the table existed via back-door SQL,
+          // so `prisma migrate deploy` then refused to apply the canonical
+          // migration. Migrations own the schema now; if this insert fails
+          // it's a real error worth surfacing.
+          request.log.error(err, "Failed to save contact inquiry");
+          return (reply as any).code(500).send({
+            error: "Internal error",
+            code: "INTERNAL_ERROR",
+            message: "Unable to submit inquiry. Please try again later.",
+          });
         }
       }
 

@@ -17,6 +17,12 @@ export const config = {
   smtpUser: process.env.SMTP_USER || "",
   smtpPass: process.env.SMTP_PASS || "",
   smtpFrom: process.env.SMTP_FROM || "sales@chronoshieldapi.com",
+  // Security/account mail (key resets, admin handoffs). Falls back to
+  // smtpFrom so deploys that haven't set this var yet still send, just from
+  // the generic sales address. Setting SMTP_FROM_SUPPORT=support@... lets
+  // reset mail come from a support-toned address without touching marketing
+  // mail reputation.
+  smtpFromSupport: process.env.SMTP_FROM_SUPPORT || process.env.SMTP_FROM || "support@chronoshieldapi.com",
   contactNotifyEmail: process.env.CONTACT_NOTIFY_EMAIL || "sales@chronoshieldapi.com",
   sentryDsn: process.env.SENTRY_DSN || "",
   nodeEnv: process.env.NODE_ENV || "development",

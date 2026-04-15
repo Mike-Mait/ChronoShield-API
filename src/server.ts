@@ -18,7 +18,7 @@ import { contactRoute } from "./routes/contact";
 import { adminRoute } from "./routes/admin";
 import { AppError } from "./utils/errors";
 import { lookupKeyAsync, incrementUsage } from "./routes/keys";
-import { getPrisma, disconnectPrisma } from "./db/client";
+import { getPrisma, disconnectPrisma, verifySchema } from "./db/client";
 
 const app = Fastify({
   logger: {
@@ -352,11 +352,16 @@ async function start() {
   // Stripe webhook needs its own encapsulated context for raw body parsing
   await app.register(webhooksRoute);
 
-  // Connect to DB if configured
+  // Connect to DB if configured, then verify schema before taking traffic.
+  // verifySchema throws on missing tables — we deliberately DO NOT catch it
+  // here, so the process crashes and Railway shows a failed deploy instead
+  // of a server that silently issues memory-only keys that vanish on restart.
   const prisma = getPrisma();
   if (prisma) {
     await prisma.$connect();
     console.log("Connected to PostgreSQL");
+    await verifySchema();
+    console.log("Schema verified (api_keys table is queryable)");
   } else {
     console.log("No DATABASE_URL set — using in-memory key store");
   }

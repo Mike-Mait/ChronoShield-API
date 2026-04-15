@@ -4,6 +4,7 @@ import { config, getStripe } from "../config/env";
 import { getPrisma } from "../db/client";
 import { createResetToken, verifyResetToken } from "../utils/resetTokens";
 import { sendResetKeyEmail } from "../utils/email";
+import { captureException } from "../config/sentry";
 
 // ─── Types ───
 interface KeyEntry {
@@ -83,8 +84,12 @@ export async function lookupKeyAsync(apiKey: string): Promise<KeyEntry | null> {
         resetAt: record.resetAt,
         createdAt: record.createdAt,
       };
-    } catch {
-      // DB error — fall through to memory
+    } catch (err) {
+      // Read-path: falling back to memory keeps live traffic flowing during
+      // transient DB blips, but silence is what hid the missing-tables bug
+      // for weeks — log loudly and capture to Sentry so outages are visible.
+      console.error("[lookupKeyAsync] DB read failed, falling back to memory:", err);
+      captureException(err, { source: "lookupKeyAsync" });
     }
   }
 
@@ -125,8 +130,12 @@ export async function incrementUsageAsync(apiKey: string): Promise<void> {
         where: { keyHash: hashKey(apiKey) },
         data: { requestsUsed: { increment: 1 } },
       });
-    } catch {
-      // DB error — fall through to memory
+    } catch (err) {
+      // Usage counter drift isn't catastrophic (memory counter still
+      // increments below), but we want Sentry visibility so a broken DB
+      // doesn't silently uncap rate limits in production.
+      console.error("[incrementUsageAsync] DB update failed:", err);
+      captureException(err, { source: "incrementUsageAsync" });
     }
   }
 
@@ -147,30 +156,32 @@ export function incrementUsage(apiKey: string): void {
 }
 
 // ─── Upgrade to Pro ───
+// Called from the Stripe webhook after a successful checkout. If DB is
+// configured and the update fails, we MUST throw — the webhook handler
+// should return non-2xx so Stripe retries, rather than silently losing a
+// paying customer's upgrade. Silent memory-only upgrades vanished on every
+// Railway restart.
 export async function upgradeToProByEmail(email: string, stripeCustomerId: string): Promise<void> {
   const prisma = getPrisma();
   if (prisma) {
-    try {
-      const existing = await prisma.apiKey.findUnique({ where: { email } });
-      if (existing?.stripeCustomerId && existing.stripeCustomerId !== stripeCustomerId) {
-        console.warn(
-          `Stripe customer ID changing for ${email}: ${existing.stripeCustomerId} → ${stripeCustomerId}`
-        );
-      }
-      await prisma.apiKey.update({
-        where: { email },
-        data: {
-          tier: "pro",
-          requestsLimit: 100_000,
-          stripeCustomerId,
-        },
-      });
-    } catch {
-      // DB error — fall through to memory
+    const existing = await prisma.apiKey.findUnique({ where: { email } });
+    if (existing?.stripeCustomerId && existing.stripeCustomerId !== stripeCustomerId) {
+      console.warn(
+        `Stripe customer ID changing for ${email}: ${existing.stripeCustomerId} → ${stripeCustomerId}`
+      );
     }
+    await prisma.apiKey.update({
+      where: { email },
+      data: {
+        tier: "pro",
+        requestsLimit: 100_000,
+        stripeCustomerId,
+      },
+    });
   }
 
-  // Also update memory/cache
+  // Also update memory/cache (no-op if this email has no in-memory entry
+  // yet — the next lookup will hydrate from DB).
   const entry = memoryKeyStore.get(email);
   if (entry) {
     entry.tier = "pro";
@@ -186,43 +197,44 @@ export async function upgradeToProByEmail(email: string, stripeCustomerId: strin
 }
 
 // ─── Downgrade to Free by Stripe Customer ID ───
+// Called from Stripe webhook for subscription cancellation, refund, or
+// payment failure. Like upgradeToProByEmail, DB errors are NOT swallowed —
+// the webhook needs to know whether the downgrade actually persisted so
+// Stripe can retry. Returning `false` from a silent catch would let a
+// cancelled customer keep Pro tier indefinitely on a DB blip.
 export async function downgradeToFreeByStripeCustomerId(stripeCustomerId: string): Promise<boolean> {
   const prisma = getPrisma();
   if (prisma) {
-    try {
-      const record = await prisma.apiKey.findFirst({
-        where: { stripeCustomerId },
-      });
-      if (!record) return false;
+    const record = await prisma.apiKey.findFirst({
+      where: { stripeCustomerId },
+    });
+    if (!record) return false;
 
-      await prisma.apiKey.update({
-        where: { email: record.email },
-        data: {
-          tier: "free",
-          requestsLimit: 1_000,
-        },
-      });
+    await prisma.apiKey.update({
+      where: { email: record.email },
+      data: {
+        tier: "free",
+        requestsLimit: 1_000,
+      },
+    });
 
-      // Also update memory/cache
-      const entry = memoryKeyStore.get(record.email);
-      if (entry) {
-        entry.tier = "free";
-        entry.requestsLimit = 1_000;
-        const cached = keyCache.get(entry.apiKey);
-        if (cached) {
-          cached.tier = "free";
-          cached.requestsLimit = 1_000;
-        }
+    // Also update memory/cache
+    const entry = memoryKeyStore.get(record.email);
+    if (entry) {
+      entry.tier = "free";
+      entry.requestsLimit = 1_000;
+      const cached = keyCache.get(entry.apiKey);
+      if (cached) {
+        cached.tier = "free";
+        cached.requestsLimit = 1_000;
       }
-
-      return true;
-    } catch {
-      return false;
     }
+
+    return true;
   }
 
-  // Fallback: search in-memory store
-  for (const [email, entry] of memoryKeyStore) {
+  // DB not configured (local dev only): search in-memory store.
+  for (const [, entry] of memoryKeyStore) {
     if (entry.stripeCustomerId === stripeCustomerId) {
       entry.tier = "free";
       entry.requestsLimit = 1_000;
@@ -254,36 +266,35 @@ async function createOrGetKey(
 ): Promise<CreateKeyResult> {
   const prisma = getPrisma();
 
-  // Check Prisma first
+  // Check Prisma first. If DB is configured and these ops fail, we let the
+  // error propagate — issuing a memory-only key is exactly the bug that
+  // created ghost keys which vanished on every Railway restart. Better to
+  // surface a 500 to the client so they can retry.
   if (prisma) {
-    try {
-      const existing = await prisma.apiKey.findUnique({ where: { email } });
-      if (existing) {
-        // Can't recover the raw key from hash — so we check memory
-        const memEntry = memoryKeyStore.get(email);
-        if (memEntry) {
-          return { apiKey: memEntry.apiKey, isExisting: true, entry: memEntry };
-        }
-        // Key exists in DB but not in memory (server restarted).
-        // Don't regenerate — that would invalidate the user's saved key.
-        return {
-          apiKey: null,
-          isExisting: true,
-          entry: null,
-          dbTier: existing.tier as "free" | "pro",
-          dbRequestsLimit: existing.requestsLimit,
-          dbStripeCustomerId: existing.stripeCustomerId,
-        };
+    const existing = await prisma.apiKey.findUnique({ where: { email } });
+    if (existing) {
+      // Can't recover the raw key from hash — so we check memory
+      const memEntry = memoryKeyStore.get(email);
+      if (memEntry) {
+        return { apiKey: memEntry.apiKey, isExisting: true, entry: memEntry };
       }
-    } catch {
-      // DB error — fall through to memory-only
+      // Key exists in DB but not in memory (server restarted).
+      // Don't regenerate — that would invalidate the user's saved key.
+      return {
+        apiKey: null,
+        isExisting: true,
+        entry: null,
+        dbTier: existing.tier as "free" | "pro",
+        dbRequestsLimit: existing.requestsLimit,
+        dbStripeCustomerId: existing.stripeCustomerId,
+      };
     }
-  }
-
-  // Check memory
-  const memExisting = memoryKeyStore.get(email);
-  if (memExisting) {
-    return { apiKey: memExisting.apiKey, isExisting: true, entry: memExisting };
+  } else {
+    // DB not configured (local dev only): check memory.
+    const memExisting = memoryKeyStore.get(email);
+    if (memExisting) {
+      return { apiKey: memExisting.apiKey, isExisting: true, entry: memExisting };
+    }
   }
 
   // Create new key
@@ -299,23 +310,23 @@ async function createOrGetKey(
     createdAt: new Date(),
   };
 
-  // Persist to DB
+  // Persist to DB. If this throws, the whole request fails — DO NOT swallow.
+  // A memory-only key is a footgun: the user saves it, uses it successfully
+  // for 30 seconds, then it disappears on the next server restart.
   if (prisma) {
-    try {
-      await prisma.apiKey.create({
-        data: {
-          email,
-          keyHash: hashKey(apiKey),
-          tier: "free",
-          requestsUsed: 0,
-          requestsLimit: 1_000,
-          resetAt,
-        },
-      });
-    } catch {
-      // DB error — continue with memory only
-    }
+    const created = await prisma.apiKey.create({
+      data: {
+        email,
+        keyHash: hashKey(apiKey),
+        tier: "free",
+        requestsUsed: 0,
+        requestsLimit: 1_000,
+        resetAt,
+      },
+    });
+    entry.id = created.id;
   }
+
   evictOldestIfNeeded(memoryKeyStore, MAX_CACHE_SIZE);
   evictOldestIfNeeded(memoryKeyIndex, MAX_CACHE_SIZE);
   evictOldestIfNeeded(keyCache, MAX_CACHE_SIZE);
@@ -364,50 +375,52 @@ function checkResetRateLimit(key: string): boolean {
 // refreshes memory/cache, and invalidates the old key. Returns the new raw
 // key, or null if no record exists for the email. Shared by the user-facing
 // reset flow and the admin handoff endpoint.
+//
+// DB errors propagate — a memory-only rotation is worse than no rotation.
+// The scenario we're avoiding: DB write fails silently, memory updates,
+// server returns a shiny new key to the user. The old hash is still in the
+// DB, so both keys work until the next restart, and then NEITHER works
+// (the new key only ever existed in process memory). Fail loud instead.
 export async function rotateKeyByEmail(email: string): Promise<string | null> {
   const prisma = getPrisma();
   const newKey = generateApiKey();
   const newHash = hashKey(newKey);
 
   if (prisma) {
-    try {
-      const existing = await prisma.apiKey.findUnique({ where: { email } });
-      if (!existing) return null;
+    const existing = await prisma.apiKey.findUnique({ where: { email } });
+    if (!existing) return null;
 
-      await prisma.apiKey.update({
-        where: { email },
-        data: { keyHash: newHash },
-      });
+    await prisma.apiKey.update({
+      where: { email },
+      data: { keyHash: newHash },
+    });
 
-      // Refresh memory/cache: purge any stale entry for the old raw key
-      const prevMem = memoryKeyStore.get(email);
-      if (prevMem) {
-        memoryKeyIndex.delete(prevMem.apiKey);
-        keyCache.delete(prevMem.apiKey);
-      }
-
-      const entry: KeyEntry = {
-        id: existing.id,
-        email,
-        apiKey: newKey,
-        tier: existing.tier as "free" | "pro",
-        requestsUsed: existing.requestsUsed,
-        requestsLimit: existing.requestsLimit,
-        stripeCustomerId: existing.stripeCustomerId ?? undefined,
-        resetAt: existing.resetAt,
-        createdAt: existing.createdAt,
-      };
-      memoryKeyStore.set(email, entry);
-      memoryKeyIndex.set(newKey, email);
-      keyCache.set(newKey, entry);
-
-      return newKey;
-    } catch {
-      // fall through to memory-only path
+    // Refresh memory/cache: purge any stale entry for the old raw key
+    const prevMem = memoryKeyStore.get(email);
+    if (prevMem) {
+      memoryKeyIndex.delete(prevMem.apiKey);
+      keyCache.delete(prevMem.apiKey);
     }
+
+    const entry: KeyEntry = {
+      id: existing.id,
+      email,
+      apiKey: newKey,
+      tier: existing.tier as "free" | "pro",
+      requestsUsed: existing.requestsUsed,
+      requestsLimit: existing.requestsLimit,
+      stripeCustomerId: existing.stripeCustomerId ?? undefined,
+      resetAt: existing.resetAt,
+      createdAt: existing.createdAt,
+    };
+    memoryKeyStore.set(email, entry);
+    memoryKeyIndex.set(newKey, email);
+    keyCache.set(newKey, entry);
+
+    return newKey;
   }
 
-  // Memory-only rotation (DB unavailable or not configured)
+  // DB not configured (local dev only): rotate in memory.
   const memEntry = memoryKeyStore.get(email);
   if (!memEntry) return null;
 
@@ -632,7 +645,12 @@ export async function keysRoute(app: FastifyInstance) {
         try {
           const record = await prisma.apiKey.findUnique({ where: { email } });
           exists = !!record && record.active;
-        } catch {
+        } catch (err) {
+          // DB blip during reset-request: fail closed (treat as not-exists)
+          // so we don't leak timing info, but surface the error to ops so a
+          // broken reset flow is visible.
+          request.log.error(err, "reset-request DB lookup failed");
+          captureException(err, { source: "reset-request.lookup" });
           exists = false;
         }
       } else {
