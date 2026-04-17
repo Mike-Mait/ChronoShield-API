@@ -1109,7 +1109,17 @@ result = cg.validate(
     }
 
     document.getElementById('modal-overlay').addEventListener('click', (e) => {
-      if (e.target === e.currentTarget) closeModal();
+      if (e.target !== e.currentTarget) return;
+      // When the API key is being displayed, require an explicit click on
+      // the Close button to dismiss. We hash the key server-side and never
+      // re-display it, so an accidental outside-click would cost the user
+      // a recovery round-trip through the email-reset flow. Every other
+      // modal state (email form, reset-sent, key-exists, pro-redirect) is
+      // click-outside-closable as usual — the safety tax applies only to
+      // the one state where data loss is actually possible.
+      const keySuccess = document.getElementById('key-success');
+      if (keySuccess && !keySuccess.classList.contains('hidden')) return;
+      closeModal();
     });
 
     /* ── Submit ── */
